@@ -1,0 +1,42 @@
+Type	Total Time in ms	Number of calls	Ms per call
+____1 multitrial_db.clear()	3.878	1	3.878
+____2 one_trial	0.000	1	0.000
+____4 all_trial	0.000	1	0.000
+ADD.GenerateLayerEdges(...)	5971.117	2972	2.009
+ADD.graph.AddLayerEdges	36.189	2972	0.012
+ADD.PrivateEdgeGenerationUtility.GenerateEdgesForClassifiedNodes	6044.375	2972	2.034
+CHURN 0 pre	3351.696	120255	0.028
+CHURN 1 addNeighbor	2723.021	3291	0.827
+CHURN 2 attachSend	283.489	3291	0.086
+CHURN 3 getRandomExistingNeighbor + detach	2.395	21	0.114
+CHURN 4 removeNeighbor	1.451	21	0.069
+CHURN 5 new_NeighborLostEvent	0.199	21	0.009
+CHURN 6 graphContext.DeleteEdge(one_edge.ID);	163.481	2578	0.063
+CHURN 7 pre DeleteEdges	393.587	81417	0.005
+CHURN 8 DeleteEdges	1373.975	81417	0.017
+CHURN 9 post DeleteEdges	2013.661	81417	0.025
+MABUSE.Simulator.DES.EndSimulationEvent	0.446	1	0.446
+MABUSE.Simulator.FSM.Aging.AgingEvent	15858.267	18775	0.845
+MABUSE.Simulator.FSM.Aging.BootEvent	286.494	2896	0.099
+MABUSE.Simulator.FSM.Aging.ClockEvent	12354.261	1529	8.080
+MABUSE.Simulator.FSM.Churn.BootEvent	295.530	2896	0.102
+MABUSE.Simulator.FSM.Churn.ChurnEvent	16832.440	120255	0.140
+MABUSE.Simulator.FSM.Churn.ChurnEvents.EdgeExpirationEvent	565.285	2568	0.220
+MABUSE.Simulator.FSM.Churn.ChurnEvents.OneOffChurnEvent	426.158	2557	0.167
+MABUSE.Simulator.FSM.Global.BootEvent	3.097	1	3.097
+MABUSE.Simulator.FSM.Global.GlobalEvent	1145.527	2	572.764
+MABUSE.Simulator.FSM.HCV.BootEvent	353.993	2896	0.122
+MABUSE.Simulator.FSM.HCV.ClockEvent	1765.786	9412	0.188
+MABUSE.Simulator.FSM.Historian.BootEvent	0.589	1	0.589
+MABUSE.Simulator.FSM.HIV.BootEvent	570.101	2896	0.197
+MABUSE.Simulator.FSM.HIV.ClockEvent	1.630	8	0.204
+MABUSE.Simulator.FSM.HIV.HIVEvents.PotentialDeathEvent	1923.546	1856	1.036
+MABUSE.Simulator.FSM.Measurement.BootEvent	200.412	2899	0.069
+MABUSE.Simulator.FSM.Measurement.MeasurementEvent	4032.522	20	201.626
+MABUSE.Simulator.FSM.Place.PlaceEvents.BootEvent	4336.707	2896	1.497
+MABUSE.Simulator.FSM.Place.PlaceEvents.MovementEvent	566883.857	363508	1.559
+MABUSE.Simulator.FSM.Place.PlaceEvents.RefreshEvent	18314.694	35061	0.522
+MABUSE.Simulator.FSM.Risk.BootEvent	325.191	2896	0.112
+==========================================================
+Total Time for this trial in ms 668835.167099997
+

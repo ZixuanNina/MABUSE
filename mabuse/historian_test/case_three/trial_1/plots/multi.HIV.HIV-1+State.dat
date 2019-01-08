@@ -1,0 +1,18 @@
+# Time HIV
+# HIV:1+State=HIV_Uninfected_State
+# HIV:1+State=HIV_Acute_State
+# HIV:1+State=HIV_Chronic_State
+# HIV:1+State=HIV_Fatality_State
+# Time	HIV_Uninfected_State	HIV_Acute_State	HIV_Chronic_State	HIV_Fatality_State	
+365	0.887	0.000	0.113	0.000	
+730	0.893	0.000	0.107	0.000	
+1095	0.897	0.000	0.103	0.000	
+1460	0.901	0.000	0.099	0.000	
+1825	0.902	0.000	0.098	0.000	
+2190	0.905	0.000	0.095	0.000	
+2555	0.908	0.000	0.092	0.000	
+2920	0.909	0.000	0.091	0.000	
+3285	0.909	0.000	0.091	0.000	
+3650	0.91	0.000	0.09	0.000	
+4015	0.909	0	0.091	0.000	
+4380	0.908	0.000	0.092	0.000	

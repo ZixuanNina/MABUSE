@@ -1,0 +1,5 @@
+  Time to initialize (ms) 2.430
+Time to do alltrials (ms) 5189223.466
+   Time to aggregate (ms) 0.011
+       Time to store (ms) 0.008
+
