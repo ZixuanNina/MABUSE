@@ -5,12 +5,26 @@ namespace mabuse.datamode
 {
     public class Node
     {
-        public static List<string> nodes = new List<string>();
-
-        public void Add(string node)
+        //work for the node type
+        public string NodeId { get; set; }
+        public double NodeStartT { get; set; }
+        public double NodeEndT { get; set; }
+        public Dictionary<string, Edge> LEdges { get; set; }
+        public Dictionary<string, Node> LNodesNeighbors { get; set; }
+        //get the degree of Node
+        public int GetDegree(double startT, double endT)
         {
-            nodes.Add(node);
+            int degree = 0;
+            foreach(Edge edge in LEdges.Values)
+            { 
+                //four possible ranges:sT >= eST && eT = est(two possible cases); sT > eET && eT <= eST(two possibles)
+                //two impossible ranges:sT >= eET || eT <= sET
+                if (!(startT >= edge.EdgeEndT) || !(endT <= edge.EdgeStartT))
+                {
+                    degree++;
+                }
+            }
+            return degree;
         }
-
     }
 }

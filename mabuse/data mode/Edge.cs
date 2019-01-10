@@ -5,17 +5,10 @@ namespace mabuse.datamode
 {
     public class Edge
     {
-        public static List<string> edges = new List<string>();
-
-        //finish the command task add and remove edge
-        public void Add(string edge)
-        {
-            edges.Add(edge);
-        }
-
-        public void Remove(string edge)
-        {
-            edges.Remove(edge);
-        }
+        public string EdgeId { get; set; }
+        public string NodeA { get; set; }
+        public string NodeB { get; set; }
+        public double EdgeStartT { get; set; }
+        public double EdgeEndT { get; set; }
     }
 }
