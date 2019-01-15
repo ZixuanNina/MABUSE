@@ -37,10 +37,9 @@
     <Compile Include="data mode\Node.cs" />
     <Compile Include="data mode\Graph.cs" />
     <Compile Include="data mode\Edge.cs" />
-    <Compile Include="data mode\NodeStore.cs" />
-    <Compile Include="data mode\EdgeStore.cs" />
-    <Compile Include="data mode\GraphStore.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="ReportFactory.cs" />
+    <Compile Include="ReportWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />

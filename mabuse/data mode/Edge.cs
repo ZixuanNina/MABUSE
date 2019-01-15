@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+Author: Zixuan(Nina) Hao
+Purpose:
+    Edge format the edge object to store the information
+ */
+
+using System;
 using System.Collections.Generic;
 
 namespace mabuse.datamode

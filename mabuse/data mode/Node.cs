@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+Author: Zixuan(Nina) Hao
+Purpose:
+    Node is a type of the dicttionary list to format the value and store the information related to the node object
+ */
+
+using System;
 using System.Collections.Generic;
 
 namespace mabuse.datamode
@@ -11,6 +17,7 @@ namespace mabuse.datamode
         public double NodeEndT { get; set; }
         public Dictionary<string, Edge> LEdges { get; set; }
         public Dictionary<string, Node> LNodesNeighbors { get; set; }
+
         //get the degree of Node
         public int GetDegree(double startT, double endT)
         {
