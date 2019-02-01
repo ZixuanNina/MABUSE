@@ -15,8 +15,10 @@ namespace mabuse.datamode
         public string NodeId { get; set; }
         public double NodeStartT { get; set; }
         public double NodeEndT { get; set; }
-        public Dictionary<string, Edge> LEdges { get; set; }
-        public Dictionary<string, Node> LNodesNeighbors { get; set; }
+        public Dictionary<string, Edge> LEdges = new Dictionary<string, Edge>();
+        public Dictionary<string, Edge> GetLEdges { get { return LEdges; } }
+        public Dictionary<string, Node> LNodesNeighbors = new Dictionary<string, Node>();
+        public Dictionary<string, Node> GetLNodesNeighbors { get { return LNodesNeighbors; } }
 
         //get the degree of Node
         public int GetDegree(double startT, double endT)

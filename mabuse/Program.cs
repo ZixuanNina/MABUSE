@@ -14,9 +14,7 @@ namespace mabuse
     {
         public static void Main(string[] args)
         {
-            Compiler("/Users/zixuanhao/Projects/mabuse/mabuse/historian_test/case_one/trial_1/networks/trace.txt", 
-            "/Users/zixuanhao/Projects/mabuse/mabuse/historian_test/case_one/result.txt");
-           
+            Compiler(args[0],args[1]);
         }
         public static void Compiler(string pathOfFile, string pathToFile)
         {

@@ -18,50 +18,26 @@ namespace mabuse.datamode
         public int CountLostEdge { get; set; }
         public double StartTime { get; set; }
         public double EndTime { get; set; }
-        public Dictionary<string, Node> LNodes { get; set; }
-        public Dictionary<string, Edge> LEdges { get; set; }
-        //generate the degree distribution for session 3
-        public Dictionary<string, int> GetMaxDegree()
+        public Dictionary<string, Node> LNodes = new Dictionary<string, Node>();
+        public Dictionary<string, Node> GetLNodes { get { return LNodes; } }
+        public Dictionary<string, Edge> LEdges = new Dictionary<string, Edge>();
+        public Dictionary<string, Edge> GetLEdges { get { return LEdges; } }
+
+        //get the max degree of this graph
+        public int GetGraphMaxDeg()
         {
-            //collectt the number of degrees of each node at the current graph time
-            int[] degrees = new int[LNodes.Count];
-            int i = 0;
+            int maxVal = int.MinValue;
+            int degree = 0;
             foreach (Node node in LNodes.Values)
             {
-                degrees[i] = node.LNodesNeighbors.Count;
+                degree = node.GetLNodesNeighbors.Count;
+                if (degree > maxVal)
+                {
+                    maxVal = degree;
+                }
             }
-            int maxDeg = degrees.Max();
-            int interval = maxDeg / 10;
-            Array.Sort(degrees);
-            Dictionary<string, int> degreeDist = new Dictionary<string, int>();
-            for (int j = 0; j < 9; j++)
-            {
-                degreeDist.Add(j*interval + "-" + (j + 1)*interval, CounterByRange(j*interval, (j + 1) * interval, degrees));
-            }
-            if (!(maxDeg % 10).Equals(0))
-            {
-                degreeDist.Add(9 * interval + "-" + maxDeg, CounterByRange(9 * interval, maxDeg, degrees));
-            }
+            return maxVal;
+        }
 
-            return degreeDist;
-        }
-        public int CounterByRange(int low, int up, int[] arr)
-        {
-            int count = 0;
-            foreach (int num in arr)
-            {
-                if(num <= up && num >= low)
-                {
-                    count++;
-                }
-                /*
-                if(num > up)
-                {
-                    break;
-                }
-                */
-            }
-            return count;
-        }
     }
 }
