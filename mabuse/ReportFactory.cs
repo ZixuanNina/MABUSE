@@ -33,10 +33,9 @@ namespace mabuse
             }
             return maxVal;
         }
-        //get the intervals of degree distribution
-        public int[] GetInterval()
+        //get the intervals based on the max given
+        public int[] GetInterval(int max)
         {
-            int max = GetMaxDeg();
             int num = 10;
             int interval = max / num;
             int[] ranges = new int[10];
@@ -72,11 +71,7 @@ namespace mabuse
         public int[] CountDegree(Graph graph)
         {
             int[] countDeg = new int[10];
-            for(int i = 0; i < 10; i++)
-            {
-                 countDeg[i] = 0;
-            }
-            int[] range = GetInterval();
+            int[] range = GetInterval(GetMaxDeg());
 
             foreach (Node node in graph.LNodes.Values)
             {
@@ -97,6 +92,41 @@ namespace mabuse
         /*
          * edgewise shared partner distribution       
          */
+         //get the max value of number of triangle
+        public int GetMaxtri()
+        {
+            int maxVal = Int32.MinValue;
+            foreach (Graph graph in graphList.Values)
+            {
+                if (graph.GetGraphMaxTri() > maxVal)
+                {
+                    maxVal = graph.GetGraphMaxTri();
+                }
+            }
+            return maxVal;
+        }
+        //count the number of edgewise shared partner
+        public int[] CountPartner(Graph graph)
+        {
+            int[] countPartner = new int[10];
+            int[] range = GetInterval(GetMaxtri());
 
+            foreach (Edge edge in graph.LEdges.Values)
+            {
+                int count = graph.GetTriNum(edge.NodeA, edge.NodeB);
+                if (count >= 0)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (count <= range[i])
+                        {
+                            countPartner[i]++;
+                            break;
+                        }
+                    }
+                }
+            }
+            return countPartner;
+        }
     }
 }

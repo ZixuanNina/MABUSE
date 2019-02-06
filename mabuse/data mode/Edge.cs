@@ -12,8 +12,8 @@ namespace mabuse.datamode
     public class Edge
     {
         public string EdgeId { get; set; }
-        public string NodeA { get; set; }
-        public string NodeB { get; set; }
+        public Node NodeA { get; set; }
+        public Node NodeB { get; set; }
         public double EdgeStartT { get; set; }
         public double EdgeEndT { get; set; }
     }
