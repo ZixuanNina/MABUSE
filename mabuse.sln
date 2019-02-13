@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mabuse", "mabuse\mabuse.csproj", "{669DBDE4-2ACC-485C-BCDD-18DF4F3F78C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABUSETest", "MABUSETest\MABUSETest.csproj", "{BDDF0AAC-C513-449D-BE34-C5EB1B05103B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +15,14 @@ Global
 		{669DBDE4-2ACC-485C-BCDD-18DF4F3F78C9}.Debug|x86.Build.0 = Debug|x86
 		{669DBDE4-2ACC-485C-BCDD-18DF4F3F78C9}.Release|x86.ActiveCfg = Release|x86
 		{669DBDE4-2ACC-485C-BCDD-18DF4F3F78C9}.Release|x86.Build.0 = Release|x86
+		{BDDF0AAC-C513-449D-BE34-C5EB1B05103B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BDDF0AAC-C513-449D-BE34-C5EB1B05103B}.Debug|x86.Build.0 = Debug|Any CPU
+		{BDDF0AAC-C513-449D-BE34-C5EB1B05103B}.Release|x86.ActiveCfg = Release|Any CPU
+		{BDDF0AAC-C513-449D-BE34-C5EB1B05103B}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.StandardHeader = $1
+		$0.VersionControlPolicy = $2
 	EndGlobalSection
 EndGlobal

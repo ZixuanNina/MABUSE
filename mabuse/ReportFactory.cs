@@ -26,9 +26,13 @@ namespace mabuse
             int maxVal = Int32.MinValue;
             foreach (Graph graph in graphList.Values)
             {
-                if(graph.GetGraphMaxDeg() > maxVal)
+                foreach(Node node in graph.LNodes.Values)
                 {
-                    maxVal = graph.GetGraphMaxDeg();
+                    int max = node.GetDegree(graphList.Keys.Last());
+                    if(max > maxVal)
+                    {
+                        maxVal = max;
+                    }
                 }
             }
             return maxVal;
@@ -75,11 +79,15 @@ namespace mabuse
 
             foreach (Node node in graph.LNodes.Values)
             {
-                int degree = node.LNodesNeighbors.Count;
+                int degree = node.GetDegree(graph.EndTime);
                 if (degree >= 0) {
                     for(int i = 0; i < 10; i++)
                     {
-                        if(degree <= range[i])
+                        if(countDeg[i] > 100)
+                        {
+                            Console.WriteLine("something");
+                        }
+                        if (degree <= range[i])
                         {
                             countDeg[i]++;
                             break;

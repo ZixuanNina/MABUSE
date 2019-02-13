@@ -37,7 +37,7 @@ namespace mabuse
 
 
             //generate the table title
-            string table = "Section2: \n";
+            string table = "365 day time step\n"+"Section2: \n";
             table += string.Format("{0,-10} | {1,10} | {2,10} | {3,10} | {4,10} | {5,10} | {6,10}\n",
             "time interval",
             "the # of nodes at the current time step",
@@ -48,8 +48,8 @@ namespace mabuse
             "the # of nodes lost over the last 365-day interval");
             foreach (Graph graph in graphList.Values)
             {
-                table += string.Format("{0,-10} {1,10} {2,10} {3,10} {4,10} {5,10} {6,10}\n",
-                graph.StartTime, graph.LNodes.Count, graph.LEdges.Count, graph.CountLostEdge, graph.CountGainEdge,
+                table += string.Format("{0,-15} {1,-41} {2,-41} {3,-52} {4,-54} {5,-54} {6,-54}\n",
+                graph.EndTime, graph.LNodes.Count, graph.LEdges.Count, graph.CountLostEdge, graph.CountGainEdge,
                     graph.CountGainNode, graph.CountLostNode);
             }
             return table;
@@ -57,9 +57,9 @@ namespace mabuse
         //section 3
         public string SectionThree(ReportFactory result)
         {
-            string table = "Section3: \n";
+            string table = "Degree distribution\n" + "Section3: \n";
             int[] interval = result.GetInterval(result.GetMaxDeg());
-            table += string.Format("{0,-10} {1,10} {2,10} {3,10} {4,10} {5,10} {6,10} {7,10} {8,10} {9,10} {10,10}\n",
+            table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
             "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2], 
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4],interval[4] + "-" + interval[5], 
                 interval[5] + "-" + interval[6], interval[6] + "-" + interval[7],interval[7] + "-" + interval[8], 
@@ -68,8 +68,8 @@ namespace mabuse
                 foreach(Graph graph in graphList.Values)
                 {
                     int[] countDeg = result.CountDegree(graph);
-                    table += string.Format("{0,-10} {1,10} {2,10} {3,10} {4,10} {5,10} {6,10} {7,10} {8,10} {9,10} {10,10}\n",
-                    graph.StartTime, countDeg[0], countDeg[1], countDeg[2], countDeg[3], countDeg[4],
+                    table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
+                    graph.EndTime, countDeg[0], countDeg[1], countDeg[2], countDeg[3], countDeg[4],
                         countDeg[5], countDeg[6], countDeg[7], countDeg[8], countDeg[9]);
                 }
             return table;
@@ -77,9 +77,9 @@ namespace mabuse
         //section 4
         public string SectionFour(ReportFactory result)
         {
-            string table = "Section4: \n";
+            string table = "Edgewise shared partner distribution\n"+"Section4: \n";
             int[] interval = result.GetInterval(result.GetMaxtri());
-            table += string.Format("{0,-10} {1,10} {2,10} {3,10} {4,10} {5,10} {6,10} {7,10} {8,10} {9,10} {10,10}\n",
+            table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
             "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2],
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4], interval[4] + "-" + interval[5],
                 interval[5] + "-" + interval[6], interval[6] + "-" + interval[7], interval[7] + "-" + interval[8],
@@ -88,8 +88,8 @@ namespace mabuse
             foreach (Graph graph in graphList.Values)
             {
                 int[] countPartner = result.CountPartner(graph);
-                table += string.Format("{0,-10} {1,10} {2,10} {3,10} {4,10} {5,10} {6,10} {7,10} {8,10} {9,10} {10,10}\n",
-                graph.StartTime, countPartner[0], countPartner[1], countPartner[2], countPartner[3], countPartner[4],
+                table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
+                graph.EndTime, countPartner[0], countPartner[1], countPartner[2], countPartner[3], countPartner[4],
                     countPartner[5], countPartner[6], countPartner[7], countPartner[8], countPartner[9]);
             }
             return table;

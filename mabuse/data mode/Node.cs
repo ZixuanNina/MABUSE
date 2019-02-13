@@ -21,16 +21,15 @@ namespace mabuse.datamode
         public Dictionary<string, Node> GetLNodesNeighbors { get { return LNodesNeighbors; } }
 
         //get the degree of Node
-        public int GetDegree(double startT, double endT)
+        public int GetDegree(double endT)
         {
             int degree = 0;
             foreach(Edge edge in LEdges.Values)
             { 
-                //four possible ranges:sT >= eST && eT = est(two possible cases); sT > eET && eT <= eST(two possibles)
-                //two impossible ranges:sT >= eET || eT <= sET
-                if (!(startT >= edge.EdgeEndT) || !(endT <= edge.EdgeStartT))
+                //check if the edge exist at the current time
+                if ((edge.EdgeStartT <= endT) && (edge.EdgeEndT >= endT || edge.EdgeEndT.Equals(0)))
                 {
-                    degree++;
+                        degree++;
                 }
             }
             return degree;

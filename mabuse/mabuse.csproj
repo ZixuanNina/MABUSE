@@ -61,7 +61,6 @@
     <None Include="historian_test\case_one\trial_1\networks\time=3651.pajek_HCV_1.clu" />
     <None Include="historian_test\case_one\trial_1\networks\time=3651.pajek_HIV_1.clu" />
     <None Include="historian_test\case_one\trial_1\networks\time=3651.pajek_drug_co_use.net" />
-    <None Include="historian_test\case_one\trial_1\networks\trace.txt" />
     <None Include="historian_test\case_one\trial_1\plots\Churn.Churn-drug-co-use+AbsDeviation-Ave.dat" />
     <None Include="historian_test\case_one\trial_1\plots\Churn.Churn-drug-co-use+AbsDeviation-Ave.gnu" />
     <None Include="historian_test\case_one\trial_1\plots\Churn.Churn-drug-co-use+AbsDeviation-Std.dat" />
@@ -964,6 +963,7 @@
     <None Include="historian_test\case_two\trial_1\plots\multi.Place.Place-Population+Frequency-Moved.gnu" />
     <None Include="historian_test\case_two\trial_1\plots\multi.Risk.Risk-drug-co-use+Acts.dat" />
     <None Include="historian_test\case_two\trial_1\plots\multi.Risk.Risk-drug-co-use+Acts.gnu" />
+    <None Include="historian_test\case_one\trial_1\networks\trace.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

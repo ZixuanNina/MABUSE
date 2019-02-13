@@ -23,22 +23,6 @@ namespace mabuse.datamode
         public Dictionary<string, Edge> LEdges = new Dictionary<string, Edge>();
         public Dictionary<string, Edge> GetLEdges { get { return LEdges; } }
 
-        //get the max degree of this graph
-        public int GetGraphMaxDeg()
-        {
-            int maxVal = int.MinValue;
-            int degree = 0;
-            foreach (Node node in LNodes.Values)
-            {
-                degree = node.GetLNodesNeighbors.Count;
-                if (degree > maxVal)
-                {
-                    maxVal = degree;
-                }
-            }
-            return maxVal;
-        }
-
         //get the number pf neighbors of two nodes in a graph.
         public int GetTriNum(Node nodeA, Node nodeB)
         {
