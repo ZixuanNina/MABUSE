@@ -5,6 +5,7 @@ Purpose:
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace mabuse.datamode
@@ -17,8 +18,8 @@ namespace mabuse.datamode
         public double NodeEndT { get; set; }
         public Dictionary<string, Edge> LEdges = new Dictionary<string, Edge>();
         public Dictionary<string, Edge> GetLEdges { get { return LEdges; } }
-        public Dictionary<string, Node> LNodesNeighbors = new Dictionary<string, Node>();
-        public Dictionary<string, Node> GetLNodesNeighbors { get { return LNodesNeighbors; } }
+        public ArrayList LNodesNeighbors = new ArrayList();
+        public ArrayList GetLNodesNeighbors { get { return LNodesNeighbors; } }
 
         //get the degree of Node
         public int GetDegree(double endT)
@@ -27,7 +28,7 @@ namespace mabuse.datamode
             foreach(Edge edge in LEdges.Values)
             { 
                 //check if the edge exist at the current time
-                if ((edge.EdgeStartT <= endT) && (edge.EdgeEndT >= endT || edge.EdgeEndT.Equals(0)))
+                if ((edge.EdgeStartT <= endT) && (edge.EdgeEndT >= endT))
                 {
                         degree++;
                 }

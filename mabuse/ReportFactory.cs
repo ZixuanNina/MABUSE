@@ -13,9 +13,11 @@ namespace mabuse
     public class ReportFactory
     {
         public Dictionary<double, Graph> graphList = new Dictionary<double, Graph>();
-        public ReportFactory(Dictionary<double, Graph> graphL)
+        public Dictionary<string, Node> nodeList = new Dictionary<string, Node>();
+        public ReportFactory(Dictionary<double, Graph> graphL, Dictionary<string, Node> nodeL) 
         {
             graphList = graphL;
+            nodeList = nodeL;
         }
         /*
          * degree distribution       
@@ -24,15 +26,12 @@ namespace mabuse
         public int GetMaxDeg()
         {
             int maxVal = Int32.MinValue;
-            foreach (Graph graph in graphList.Values)
+            foreach(Node node in nodeList.Values)
             {
-                foreach(Node node in graph.LNodes.Values)
+                int max = node.GetDegree(graphList.Keys.Last());
+                if (max > maxVal)
                 {
-                    int max = node.GetDegree(graphList.Keys.Last());
-                    if(max > maxVal)
-                    {
-                        maxVal = max;
-                    }
+                    maxVal = max;
                 }
             }
             return maxVal;
@@ -83,11 +82,7 @@ namespace mabuse
                 if (degree >= 0) {
                     for(int i = 0; i < 10; i++)
                     {
-                        if(countDeg[i] > 100)
-                        {
-                            Console.WriteLine("something");
-                        }
-                        if (degree <= range[i])
+                        if (degree < range[i])
                         {
                             countDeg[i]++;
                             break;

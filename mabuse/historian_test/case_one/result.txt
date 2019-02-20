@@ -2,8 +2,8 @@ MABUSE Report
 
 This report output the graph data based on the time of the simulation with 365 days a cycle. 
 
-Report Date: Tuesday, February 12, 2019
-Report Time: 6:53:14 PM
+Report Date: Tuesday, February 19, 2019
+Report Time: 4:25:35 PM
 
 
 365 day time step
@@ -33,7 +33,7 @@ time interval | the # of nodes at the current time step | the # of edges at the 
 
 Degree distribution
 Section3: 
-time interval        0-1        1-2        2-3        3-4        4-5        5-6        6-7        7-8        8-9        9-10      
+time interval        0-1        1-2        2-3        3-4        4-5        5-6        6-7        7-8        8-9        9-15      
 0                    1000       0          0          0          0          0          0          0          0          0         
 365                  1000       0          0          0          0          0          0          0          0          0         
 730                  1000       0          0          0          0          0          0          0          0          0         

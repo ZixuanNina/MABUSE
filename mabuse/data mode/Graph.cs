@@ -27,11 +27,11 @@ namespace mabuse.datamode
         public int GetTriNum(Node nodeA, Node nodeB)
         {
             int count = 0;
-            foreach (Node node in LNodes[nodeA.NodeId].LNodesNeighbors.Values)
+            foreach (String node in LNodes[nodeA.NodeId].LNodesNeighbors)
             {
-                if (nodeB.NodeId != node.NodeId && LNodes[nodeB.NodeId].LNodesNeighbors.ContainsKey(node.NodeId))
+                if (nodeB.NodeId != node && LNodes[nodeB.NodeId].LNodesNeighbors.Contains(node))
                 {
-                    Console.WriteLine(nodeB.NodeId + "&&" + node.NodeId + "&&" + nodeA.NodeId);
+                    Console.WriteLine(nodeB.NodeId + "&&" + node + "&&" + nodeA.NodeId);
                     count++;
                 }
             }

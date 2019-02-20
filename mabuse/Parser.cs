@@ -6,6 +6,7 @@ Purpose:
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using mabuse.datamode;
 
 
@@ -21,6 +22,9 @@ namespace mabuse
         public int countLostNode;
         public int countGainEdge;
         public int countLostEdge;
+        //list of temporary lNodes and lEdge for the purpose of avoiding the pointer changing data
+        public Dictionary<string, Node> lNodesTemp = new Dictionary<string, Node>();
+        public Dictionary<string, Edge> lEdgesTemp = new Dictionary<string, Edge>();
         public Parser(string pathOfFile)
         {
             //initialization
@@ -107,14 +111,26 @@ namespace mabuse
                     }
                 }
             }
-                lGraphs[graphTime].CountGainEdge = countGainEdge;
-                lGraphs[graphTime].CountLostEdge = countLostEdge;
-                lGraphs[graphTime].CountGainNode = countGainNode;
-                lGraphs[graphTime].CountLostNode = countLostNode;
+            lGraphs[graphTime].CountGainEdge = countGainEdge;
+            lGraphs[graphTime].CountLostEdge = countLostEdge;
+            lGraphs[graphTime].CountGainNode = countGainNode;
+            lGraphs[graphTime].CountLostNode = countLostNode;
+            foreach(Edge edge in lEdges.Values)
+            {
+                if (edge.EdgeEndT.Equals(0))
+                {
+                    double maxT = lGraphs.Keys.Last();
+                    lEdges[edge.EdgeId].EdgeEndT = maxT;
+                }
+            }
         }
         public Dictionary<double, Graph> GetGraph()
         {
             return lGraphs;
+        }
+        public Dictionary<string, Node> GetNodeL()
+        {
+            return lNodes;
         }
 
         //commands functions
@@ -125,6 +141,7 @@ namespace mabuse
             countGainNode++;
             //add node set the start time
             lNodes.Add(node, new Node { NodeId = node, NodeStartT = time });
+            lNodesTemp.Add(node, new Node { NodeId = node, NodeStartT = time });
             lGraphs[graphTime].LNodes.Add(node, new Node { NodeId = node, NodeStartT = time });
         }
 
@@ -135,7 +152,7 @@ namespace mabuse
             countLostNode++;
             //remove node set the end time 
             lNodes[node].NodeEndT = time;
-            lGraphs[graphTime].LNodes.Remove(node);
+
             //remove all the connected edge, set the end time the same as the node
             foreach (Edge edge in lNodes[node].LEdges.Values)
             {
@@ -147,23 +164,26 @@ namespace mabuse
                     //increment the lost edge count
                     countLostEdge++;
                     lGraphs[graphTime].LEdges.Remove(edge.EdgeId);
+                    lGraphs[graphTime].LNodes[node].LEdges.Remove(edge.EdgeId);
                 }
             }
             //remove all neighbor status of neighbor nodes
 
-            foreach (Node nodeTemp in lNodes[node].LNodesNeighbors.Values)
+            foreach (string nodeTemp in lNodes[node].LNodesNeighbors)
             {
 
-                if (nodeTemp.LNodesNeighbors.ContainsKey(node))
+                if (lNodes[nodeTemp].LNodesNeighbors.Contains(node))
                 {
-                    nodeTemp.LNodesNeighbors[node].NodeEndT = time;
-                    if (lGraphs[graphTime].LNodes[nodeTemp.NodeId].LNodesNeighbors.ContainsKey(node))
+                    lNodes[nodeTemp].LNodesNeighbors.Remove(node);
+                    if (lGraphs[graphTime].LNodes[nodeTemp].LNodesNeighbors.Contains(node))
                     {
-                        lGraphs[graphTime].LNodes[nodeTemp.NodeId].LNodesNeighbors.Remove(nodeTemp.NodeId);
+                        lGraphs[graphTime].LNodes[nodeTemp].LNodesNeighbors.Remove(node);
                     }
                 }
 
             }
+            lNodesTemp.Remove(node);
+            lGraphs[graphTime].LNodes.Remove(node);
         }
 
         //add edge
@@ -175,10 +195,10 @@ namespace mabuse
                 countGainEdge++;
 
                 //add the neighbor to each node
-                lNodes[nodeA].LNodesNeighbors.Add(nodeB, new Node { NodeId = nodeB, NodeStartT = time });
-                lNodes[nodeB].LNodesNeighbors.Add(nodeA, new Node { NodeId = nodeA, NodeStartT = time });
-                lGraphs[graphTime].LNodes[nodeA].LNodesNeighbors.Add(nodeB, new Node { NodeId = nodeB, NodeStartT = time });
-                lGraphs[graphTime].LNodes[nodeB].LNodesNeighbors.Add(nodeA, new Node { NodeId = nodeA, NodeStartT = time });
+                lNodes[nodeA].LNodesNeighbors.Add(nodeB);
+                lNodes[nodeB].LNodesNeighbors.Add(nodeA);
+                lGraphs[graphTime].LNodes[nodeA].LNodesNeighbors.Add(nodeB);
+                lGraphs[graphTime].LNodes[nodeB].LNodesNeighbors.Add(nodeA);
                 //add the edge to the node
                 lNodes[nodeA].LEdges.Add(nodeA + "-" + nodeB, new Edge { EdgeId = nodeA + "-" + nodeB, NodeA = lNodes[nodeA], NodeB = lNodes[nodeB], EdgeStartT = time });
                 lNodes[nodeB].LEdges.Add(nodeA + "-" + nodeB, new Edge { EdgeId = nodeA + "-" + nodeB, NodeA = lNodes[nodeA], NodeB = lNodes[nodeB], EdgeStartT = time});
@@ -186,6 +206,7 @@ namespace mabuse
                 lGraphs[graphTime].LNodes[nodeB].LEdges.Add(nodeA + "-" + nodeB, new Edge { EdgeId = nodeA + "-" + nodeB, NodeA = lNodes[nodeA], NodeB = lNodes[nodeB], EdgeStartT = time});
                 //set the start time of edge
                 lEdges.Add(nodeA + "-" + nodeB, new Edge { EdgeId = nodeA + "-" + nodeB, NodeA = lNodes[nodeA], NodeB = lNodes[nodeB], EdgeStartT = time });
+                lEdgesTemp.Add(nodeA + "-" + nodeB, new Edge { EdgeId = nodeA + "-" + nodeB, NodeA = lNodes[nodeA], NodeB = lNodes[nodeB], EdgeStartT = time });
                 lGraphs[graphTime].LEdges.Add(nodeA + "-" + nodeB, new Edge { EdgeId = nodeA + "-" + nodeB, NodeA = lNodes[nodeA], NodeB = lNodes[nodeB], EdgeStartT = time});
             }
         }
@@ -199,16 +220,16 @@ namespace mabuse
                 countLostEdge++;
                 //set the end time of edge
                 lEdges[nodeA + "-" + nodeB].EdgeEndT = time;
-                lGraphs[graphTime].LEdges.Remove(nodeA + "-" + nodeB);
                 //remove neighbor
-                lNodes[nodeA].LNodesNeighbors[nodeB].NodeEndT = time;
-                lNodes[nodeB].LNodesNeighbors[nodeA].NodeEndT = time;
                 lGraphs[graphTime].LNodes[nodeA].LNodesNeighbors.Remove(nodeB);
                 lGraphs[graphTime].LNodes[nodeB].LNodesNeighbors.Remove(nodeA);
                 //remove edge to the node
                 lNodes[nodeA].LEdges[nodeA + "-" + nodeB].EdgeEndT = time;
                 lGraphs[graphTime].LNodes[nodeA].LEdges.Remove(nodeA + "-" + nodeB);
                 lGraphs[graphTime].LNodes[nodeB].LEdges.Remove(nodeA + "-" + nodeB);
+                //edge remove
+                lEdgesTemp.Remove(nodeA + "-" + nodeB);
+                lGraphs[graphTime].LEdges.Remove(nodeA + "-" + nodeB);
             }
         }
     }

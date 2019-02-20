@@ -1,7 +1,8 @@
 using System;
 using Xunit;
+using mabuse;
 
-namespace MABUSETest
+namespace mabuseTest
 {
     public class UnitTest1
     {
