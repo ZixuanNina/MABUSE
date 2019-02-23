@@ -11,7 +11,7 @@ namespace mabuse
         [Test()]
         public void TestParser(Parser parser)
         {
-            parser.AddEdge("nodeA", "nodeB", 365, 3);
+            parser.AddEdge("nodeA", "nodeB", 3);
             Assert.AreEqual(365, parser.GetGraph()[365].EndTime);
             Assert.IsNotEmpty(parser.GetGraph());
         }

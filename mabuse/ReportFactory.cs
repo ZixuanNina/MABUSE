@@ -82,7 +82,7 @@ namespace mabuse
                 if (degree >= 0) {
                     for(int i = 0; i < 10; i++)
                     {
-                        if (degree < range[i])
+                        if (degree <= range[i])
                         {
                             countDeg[i]++;
                             break;

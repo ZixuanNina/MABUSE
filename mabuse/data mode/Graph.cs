@@ -27,9 +27,9 @@ namespace mabuse.datamode
         public int GetTriNum(Node nodeA, Node nodeB)
         {
             int count = 0;
-            foreach (String node in LNodes[nodeA.NodeId].LNodesNeighbors)
+            foreach (Node node in LNodes[nodeA.NodeId].LNodesNeighbors.Values)
             {
-                if (nodeB.NodeId != node && LNodes[nodeB.NodeId].LNodesNeighbors.Contains(node))
+                if (nodeB.NodeId != node.NodeId && LNodes[nodeB.NodeId].LNodesNeighbors.ContainsKey(node.NodeId))
                 {
                     Console.WriteLine(nodeB.NodeId + "&&" + node + "&&" + nodeA.NodeId);
                     count++;
