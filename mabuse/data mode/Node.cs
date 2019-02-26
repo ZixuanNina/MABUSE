@@ -21,19 +21,5 @@ namespace mabuse.datamode
         public Dictionary<string, Node> LNodesNeighbors = new Dictionary<string, Node>();
         public Dictionary<string, Node> GetLNodesNeighbors { get { return LNodesNeighbors; } }
 
-        //get the degree of Node
-        public int GetDegree(double endT)
-        {
-            int degree = 0;
-            foreach(Edge edge in LEdges.Values)
-            { 
-                //check if the edge exist at the current time
-                if ((edge.EdgeStartT <= endT) && ((edge.EdgeEndT >= endT) || edge.EdgeEndT.Equals(0)))
-                {
-                        degree++;
-                }
-            }
-            return degree;
-        }
     }
 }

@@ -20,7 +20,7 @@ namespace mabuse
         {
             Parser parser = new Parser(pathOfFile);
             Dictionary<double, Graph> graphL = parser.GetGraph();
-            ReportFactory result = new ReportFactory(graphL, parser.lNodes);
+            ReportFactory result = new ReportFactory(graphL, parser.GetNodeL());
             ReportWriter writer = new ReportWriter(result,pathToFile);
         }
     }

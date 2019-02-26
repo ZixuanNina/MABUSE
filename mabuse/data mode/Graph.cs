@@ -23,21 +23,31 @@ namespace mabuse.datamode
         public Dictionary<string, Edge> LEdges = new Dictionary<string, Edge>();
         public Dictionary<string, Edge> GetLEdges { get { return LEdges; } }
 
+        //Get the max degree og the graph
+        public int GetMaxDeg()
+        {
+            int degree = 0;
+            int maxDeg = int.MinValue;
+            foreach (Node node in LNodes.Values)
+            {
+                degree = node.LEdges.Count;
+                if(degree > maxDeg)
+                {
+                    maxDeg = degree;
+                }
+            }
+            return maxDeg;
+        }
         //get the number pf neighbors of two nodes in a graph.
         public int GetTriNum(Node nodeA, Node nodeB)
         {
             int count = 0;
             foreach (Node node in LNodes[nodeA.NodeId].LNodesNeighbors.Values)
             {
-                if (nodeB.NodeId != node.NodeId && LNodes[nodeB.NodeId].LNodesNeighbors.ContainsKey(node.NodeId))
+                if (!nodeB.NodeId.Equals(node.NodeId) && LNodes[nodeB.NodeId].LNodesNeighbors.ContainsKey(node.NodeId))
                 {
-                    Console.WriteLine(nodeB.NodeId + "&&" + node + "&&" + nodeA.NodeId);
                     count++;
                 }
-            }
-            if(count > 1)
-            {
-                Console.WriteLine("edgewise partner");
             }
             return count;
         }

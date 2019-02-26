@@ -26,9 +26,9 @@ namespace mabuse
         public int GetMaxDeg()
         {
             int maxVal = Int32.MinValue;
-            foreach(Node node in nodeList.Values)
+            foreach(Graph graph in graphList.Values)
             {
-                int max = node.GetDegree(graphList.Keys.Last());
+                int max = graph.GetMaxDeg();
                 if (max > maxVal)
                 {
                     maxVal = max;
@@ -78,7 +78,7 @@ namespace mabuse
 
             foreach (Node node in graph.LNodes.Values)
             {
-                int degree = node.GetDegree(graph.EndTime);
+                int degree = node.LEdges.Count;
                 if (degree >= 0) {
                     for(int i = 0; i < 10; i++)
                     {
