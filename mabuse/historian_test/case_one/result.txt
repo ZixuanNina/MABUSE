@@ -2,8 +2,8 @@ MABUSE Report
 
 This report output the graph data based on the time of the simulation with 365 days a cycle. 
 
-Report Date: Monday, February 25, 2019
-Report Time: 6:17:31 PM
+Report Date: Tuesday, February 26, 2019
+Report Time: 5:43:03 PM
 
 
 365 day time step
@@ -54,7 +54,7 @@ time interval        0-1        1-2        2-3        3-4        4-5        5-6 
 6205                 959        36         4          1          0          0          0          0          0          0         
 6570                 970        28         2          0          0          0          0          0          0          0         
 6935                 974        24         2          0          0          0          0          0          0          0         
-7300                 974        24         2          0          0          0          0          0          0          0         
+7300                 975        23         2          0          0          0          0          0          0          0         
 
 Edgewise shared partner distribution
 Section4: 

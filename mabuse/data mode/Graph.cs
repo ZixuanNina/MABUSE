@@ -3,10 +3,7 @@ Author: Zixuan(Nina) Hao
 Purpose:
     Graph collect the Node list and Edge list to generat the useful result for the graph based on the time interval.
  */
-
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace mabuse.datamode
 {

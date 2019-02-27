@@ -44,10 +44,17 @@
     <Compile Include="Parser.cs" />
     <Compile Include="ReportFactory.cs" />
     <Compile Include="ReportWriter.cs" />
-    <Compile Include="NUnitTestClass.cs" />
+    <Compile Include="UnitTest\EdgeClassTest.cs" />
+    <Compile Include="UnitTest\GraphClassTest.cs" />
+    <Compile Include="UnitTest\NodeClassTest.cs" />
+    <Compile Include="UnitTest\ParserClassTest.cs" />
+    <Compile Include="UnitTest\ProgramClassTest.cs" />
+    <Compile Include="UnitTest\ReportFactoryClassTest.cs" />
+    <Compile Include="UnitTest\ReprtWriterClassTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />
+    <Folder Include="UnitTest\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="historian_test\.DS_Store" />
