@@ -12,23 +12,21 @@ namespace mabuse
 {
     public class ReportFactory
     {
-        public Dictionary<double, Graph> graphList = new Dictionary<double, Graph>();
-        public Dictionary<string, Node> nodeList = new Dictionary<string, Node>();
-        public ReportFactory(Dictionary<double, Graph> graphL, Dictionary<string, Node> nodeL) 
+        public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
+        public ReportFactory(Dictionary<double, Graph> Graphs) 
         {
-            graphList = graphL;
-            nodeList = nodeL;
+            GraphTimeToGraphObjectDict = Graphs;
         }
         /*
          * degree distribution       
          */
         //get the max degree through the graphs
-        public int GetMaxDeg()
+        public int GetMaxDegree()
         {
             int maxVal = Int32.MinValue;
-            foreach(Graph graph in graphList.Values)
+            foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
             {
-                int max = graph.GetMaxDeg();
+                int max = graph.GetMaxDegree();
                 if (max > maxVal)
                 {
                     maxVal = max;
@@ -74,11 +72,11 @@ namespace mabuse
         public int[] CountDegree(Graph graph)
         {
             int[] countDeg = new int[10];
-            int[] range = GetInterval(GetMaxDeg());
+            int[] range = GetInterval(GetMaxDegree());
 
-            foreach (Node node in graph.LNodes.Values)
+            foreach (Node node in graph.NodeIdToNodeObjectDict.Values)
             {
-                int degree = node.LEdges.Count;
+                int degree = node.EdgeIdToEdgeObjectDict.Count;
                 if (degree >= 0) {
                     for(int i = 0; i < 10; i++)
                     {
@@ -99,11 +97,11 @@ namespace mabuse
         public int GetMaxtri()
         {
             int maxVal = Int32.MinValue;
-            foreach (Graph graph in graphList.Values)
+            foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
             {
-                if (graph.GetGraphMaxTri() > maxVal)
+                if (graph.GetGraphMaxNumberOfPartnerwiseNeighbors() > maxVal)
                 {
-                    maxVal = graph.GetGraphMaxTri();
+                    maxVal = graph.GetGraphMaxNumberOfPartnerwiseNeighbors();
                 }
             }
             return maxVal;
@@ -114,9 +112,9 @@ namespace mabuse
             int[] countPartner = new int[10];
             int[] range = GetInterval(GetMaxtri());
 
-            foreach (Edge edge in graph.LEdges.Values)
+            foreach (Edge edge in graph.EdgeIdToEdgeObjectDict.Values)
             {
-                int count = graph.GetTriNum(edge.NodeA, edge.NodeB);
+                int count = graph.CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB);
                 if (count >= 0)
                 {
                     for (int i = 0; i < 10; i++)

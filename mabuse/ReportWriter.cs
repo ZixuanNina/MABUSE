@@ -15,7 +15,7 @@ namespace mabuse
         public Dictionary<double, Graph> graphList = new Dictionary<double, Graph>();
         public ReportWriter(ReportFactory result, string filePath)
         {
-            graphList = result.graphList;
+            graphList = result.GraphTimeToGraphObjectDict;
             string[] lines = { Section1(), SectionTwo(), SectionThree(result), SectionFour(result)};
             System.IO.File.WriteAllLines(@filePath, lines);
         }
@@ -49,7 +49,7 @@ namespace mabuse
             foreach (Graph graph in graphList.Values)
             {
                 table += string.Format("{0,-15} {1,-41} {2,-41} {3,-52} {4,-54} {5,-54} {6,-54}\n",
-                graph.EndTime, graph.LNodes.Count, graph.LEdges.Count, graph.CountLostEdge, graph.CountGainEdge,
+                graph.GraphEndTime, graph.NodeIdToNodeObjectDict.Count, graph.EdgeIdToEdgeObjectDict.Count, graph.CountLostEdge, graph.CountGainEdge,
                     graph.CountGainNode, graph.CountLostNode);
             }
             return table;
@@ -58,7 +58,7 @@ namespace mabuse
         public string SectionThree(ReportFactory result)
         {
             string table = "Degree distribution\n" + "Section3: \n";
-            int[] interval = result.GetInterval(result.GetMaxDeg());
+            int[] interval = result.GetInterval(result.GetMaxDegree());
             table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
             "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2], 
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4],interval[4] + "-" + interval[5], 
@@ -69,7 +69,7 @@ namespace mabuse
                 {
                     int[] countDeg = result.CountDegree(graph);
                     table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
-                    graph.EndTime, countDeg[0], countDeg[1], countDeg[2], countDeg[3], countDeg[4],
+                    graph.GraphEndTime, countDeg[0], countDeg[1], countDeg[2], countDeg[3], countDeg[4],
                         countDeg[5], countDeg[6], countDeg[7], countDeg[8], countDeg[9]);
                 }
             return table;
@@ -89,7 +89,7 @@ namespace mabuse
             {
                 int[] countPartner = result.CountPartner(graph);
                 table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
-                graph.EndTime, countPartner[0], countPartner[1], countPartner[2], countPartner[3], countPartner[4],
+                graph.GraphEndTime, countPartner[0], countPartner[1], countPartner[2], countPartner[3], countPartner[4],
                     countPartner[5], countPartner[6], countPartner[7], countPartner[8], countPartner[9]);
             }
             return table;

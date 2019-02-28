@@ -19,8 +19,7 @@ namespace mabuse
         public static void Compiler(string pathOfFile, string pathToFile)
         {
             Parser parser = new Parser(pathOfFile);
-            Dictionary<double, Graph> graphL = parser.GetGraph();
-            ReportFactory result = new ReportFactory(graphL, parser.GetNodeL());
+            ReportFactory result = new ReportFactory(parser.GetGraphTimeToGraphDictionary());
             ReportWriter writer = new ReportWriter(result,pathToFile);
         }
     }
