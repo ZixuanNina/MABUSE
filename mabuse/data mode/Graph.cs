@@ -23,7 +23,7 @@ namespace mabuse.datamode
         /// Gets the maximum degree.
         /// </summary>
         /// <returns>The max deg.</returns>/
-        public int GetMaxDegree()
+        public int GetMaxDegreeOfGraph()
         {
             int degree = 0;
             int maxDegree = int.MinValue;

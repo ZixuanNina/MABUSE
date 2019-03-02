@@ -1,15 +1,16 @@
-﻿/*
-Author: Zixuan(Nina) Hao
-Purpose:
-    ReportFactory collectt all the information based on the object provided to retrive the data and generate the report.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using mabuse.datamode;
 
 namespace mabuse
 {
+    /// <summary>
+    /// ReportFactory collectt all the information based on the object provided to retrive the data 
+    /// and generate the information to report.
+    /// </summary>
+    /// <author>
+    /// Zixuan(Nina) Hao
+    /// </author>
     public class ReportFactory
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
@@ -17,27 +18,35 @@ namespace mabuse
         {
             GraphTimeToGraphObjectDict = Graphs;
         }
-        /*
-         * degree distribution       
-         */
-        //get the max degree through the graphs
+        /// <summary>
+        /// Gets the maximum number of degree of the nodes.
+        /// </summary>
+        /// <returns>The max degree.</returns>/
         public int GetMaxDegree()
         {
-            int maxVal = Int32.MinValue;
+            int maxValOfDegrees = Int32.MinValue;
             foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
             {
-                int max = graph.GetMaxDegree();
-                if (max > maxVal)
+                int max = graph.GetMaxDegreeOfGraph();
+                if (max > maxValOfDegrees)
                 {
-                    maxVal = max;
+                    maxValOfDegrees = max;
                 }
             }
-            return maxVal;
+            return maxValOfDegrees;
         }
-        //get the intervals based on the max given
-        public int[] GetInterval(int max)
+        /// <summary>
+        /// Gets the interval of tupes
+        /// </summary>
+        /// <returns>The interval of tubes for report.</returns>
+        /// <param name="max">Max.</param>
+        public int[] GetIntervalOfTheDistribution(int max)
         {
             int num = 10;
+            if(max < 0)
+            {
+                throw new Exception($"Negative counting found value: {max}");
+            }
             int interval = max / num;
             int[] ranges = new int[10];
             if (interval == 0)
@@ -68,11 +77,15 @@ namespace mabuse
             }
             return ranges;
         }
-        //count the number of existence of the nodes in the degree interval
-        public int[] CountDegree(Graph graph)
+        /// <summary>
+        /// count the number of existence of the nodes in the degree interval
+        /// </summary>
+        /// <returns>The degree.</returns>
+        /// <param name="graph">Graph.</param>
+        public int[] CountDegreeWithInterval(Graph graph)
         {
-            int[] countDeg = new int[10];
-            int[] range = GetInterval(GetMaxDegree());
+            int[] countDegree = new int[10];
+            int[] range = GetIntervalOfTheDistribution(GetMaxDegree());
 
             foreach (Node node in graph.NodeIdToNodeObjectDict.Values)
             {
@@ -82,35 +95,40 @@ namespace mabuse
                     {
                         if (degree <= range[i])
                         {
-                            countDeg[i]++;
+                            countDegree[i]++;
                             break;
                         }
                     }
                 }
             }
-            return  countDeg;
+            return  countDegree;
         }
-        /*
-         * edgewise shared partner distribution       
-         */
-         //get the max value of number of triangle
-        public int GetMaxtri()
+        //get the max value of number of triangle
+        /// <summary>
+        /// get the max value of number of triangle for edgewise shared partner distribution 
+        /// </summary>
+        /// <returns>The maxtri.</returns>
+        public int GetMaxNumberOfCommonNeighbor()
         {
-            int maxVal = Int32.MinValue;
+            int maxValue = Int32.MinValue;
             foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
             {
-                if (graph.GetGraphMaxNumberOfPartnerwiseNeighbors() > maxVal)
+                if (graph.GetGraphMaxNumberOfPartnerwiseNeighbors() > maxValue)
                 {
-                    maxVal = graph.GetGraphMaxNumberOfPartnerwiseNeighbors();
+                    maxValue = graph.GetGraphMaxNumberOfPartnerwiseNeighbors();
                 }
             }
-            return maxVal;
+            return maxValue;
         }
-        //count the number of edgewise shared partner
+        /// <summary>
+        /// count the number of edgewise shared partner
+        /// </summary>
+        /// <returns>The partner.</returns>
+        /// <param name="graph">Graph.</param>
         public int[] CountPartner(Graph graph)
         {
             int[] countPartner = new int[10];
-            int[] range = GetInterval(GetMaxtri());
+            int[] range = GetIntervalOfTheDistribution(GetMaxNumberOfCommonNeighbor());
 
             foreach (Edge edge in graph.EdgeIdToEdgeObjectDict.Values)
             {

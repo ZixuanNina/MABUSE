@@ -44,9 +44,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="ReportFactory.cs" />
     <Compile Include="ReportWriter.cs" />
-    <Compile Include="UnitTest\EdgeClassTest.cs" />
     <Compile Include="UnitTest\GraphClassTest.cs" />
-    <Compile Include="UnitTest\NodeClassTest.cs" />
     <Compile Include="UnitTest\ParserClassTest.cs" />
     <Compile Include="UnitTest\ProgramClassTest.cs" />
     <Compile Include="UnitTest\ReportFactoryClassTest.cs" />

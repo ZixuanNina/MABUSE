@@ -5,8 +5,8 @@ namespace mabuse.UnitTest
     [TestFixture()]
     public class ProgramClassTest
     {
-        [Test()]
-        public void TestCase()
+        [Test]
+        public void Test_CompilerEmpty()
         {
         }
     }

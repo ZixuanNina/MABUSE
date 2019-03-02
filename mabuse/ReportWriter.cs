@@ -1,27 +1,29 @@
-﻿/*
-Author: Zixuan(Nina) Hao
-Purpose:
-    ReportWriter class generate the report to the ideal format of tables
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using mabuse.datamode;
 
 namespace mabuse
 {
+    /// <summary>
+    /// ReportWriter class generate the report to the ideal format of tables
+    /// </summary>
+    /// <author>
+    /// Zixuan(Nina) Hao
+    /// </author>
     public class ReportWriter
     {
         public Dictionary<double, Graph> graphList = new Dictionary<double, Graph>();
         public ReportWriter(ReportFactory result, string filePath)
         {
             graphList = result.GraphTimeToGraphObjectDict;
-            string[] lines = { Section1(), SectionTwo(), SectionThree(result), SectionFour(result)};
+            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
-        //section 1
-        public string Section1()
+        /// <summary>
+        /// Section One
+        /// </summary>
+        private string SectionOne()
         {
             string title = "MABUSE Report\n";
             string paragraph = "This report output the graph data based on the time of the simulation with 365 days a cycle. \n";
@@ -29,8 +31,10 @@ namespace mabuse
             string section1 = title + Environment.NewLine + paragraph + Environment.NewLine + reportTime + Environment.NewLine;
             return section1;
         }
-        //section 2
-        public string SectionTwo()
+        /// <summary>
+        /// Section two.
+        /// </summary>
+        private string SectionTwo()
         {
             //generate the tuple
             Tuple<double, int, int, int, int, int, int>[] numbers = new Tuple<double, int, int, int, int, int, int>[graphList.Count];
@@ -54,11 +58,14 @@ namespace mabuse
             }
             return table;
         }
-        //section 3
-        public string SectionThree(ReportFactory result)
+        /// <summary>
+        /// Section Three.
+        /// </summary>
+        /// <param name="result">Result.</param>
+        private string SectionThree(ReportFactory result)
         {
             string table = "Degree distribution\n" + "Section3: \n";
-            int[] interval = result.GetInterval(result.GetMaxDegree());
+            int[] interval = result.GetIntervalOfTheDistribution(result.GetMaxDegree());
             table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
             "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2], 
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4],interval[4] + "-" + interval[5], 
@@ -67,18 +74,21 @@ namespace mabuse
             Dictionary<double, string> list = new Dictionary<double, string>();
                 foreach(Graph graph in graphList.Values)
                 {
-                    int[] countDeg = result.CountDegree(graph);
+                    int[] countDeg = result.CountDegreeWithInterval(graph);
                     table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
                     graph.GraphEndTime, countDeg[0], countDeg[1], countDeg[2], countDeg[3], countDeg[4],
                         countDeg[5], countDeg[6], countDeg[7], countDeg[8], countDeg[9]);
                 }
             return table;
         }
-        //section 4
-        public string SectionFour(ReportFactory result)
+        /// <summary>
+        /// Sections Four.
+        /// </summary>
+        /// <param name="result">Result.</param>
+        private string SectionFour(ReportFactory result)
         {
             string table = "Edgewise shared partner distribution\n"+"Section4: \n";
-            int[] interval = result.GetInterval(result.GetMaxtri());
+            int[] interval = result.GetIntervalOfTheDistribution(result.GetMaxNumberOfCommonNeighbor());
             table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
             "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2],
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4], interval[4] + "-" + interval[5],
