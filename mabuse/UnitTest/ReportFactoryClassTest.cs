@@ -45,7 +45,7 @@ namespace mabuse.UnitTest
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             int maxDeg = reportFactory.GetMaxDegree();
-            Assert.AreEqual(maxDeg, 0);
+            Assert.AreEqual(maxDeg, int.MinValue);
             graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
             graph[365].NodeIdToNodeObjectDict.Add("b", new Node { NodeId = "b" });
             ReportFactory reportFactory1 = new ReportFactory(graph);
@@ -103,11 +103,10 @@ namespace mabuse.UnitTest
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
-                { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
-            int[] range = reportFactory.GetIntervalOfTheDistribution(-1);
+            var ex = Assert.Throws<Exception>(() => reportFactory.GetIntervalOfTheDistribution(-1));
+            Assert.That(ex.Message, Is.EqualTo("Negative counting found value: -1"));
 
         }
 
@@ -172,11 +171,14 @@ namespace mabuse.UnitTest
                 { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
-            ;
             ReportFactory reportFactory = new ReportFactory(graph);
-            int[] countDeg = reportFactory.CountDegreeWithInterval(graph[0]);
+            var ex = Assert.Throws<Exception>(() => reportFactory.CountDegreeWithInterval(graph[0]));
+            Assert.That(ex.Message, Is.EqualTo($"Negative counting found value: {int.MinValue}"));
+            graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
+            int[] count = reportFactory.CountDegreeWithInterval(graph[0]);
             int[] expect = new int[10];
-            Assert.AreEqual(countDeg, expect);
+            expect[0] = 1;
+            Assert.AreEqual(count, expect);
         }
 
         //with degrees
@@ -297,49 +299,25 @@ namespace mabuse.UnitTest
             graph[0].NodeIdToNodeObjectDict["c"].NodeIdOfNeighborsOfNodeObjectDict.Add("a", new Node { NodeId = "a" });
             graph[0].NodeIdToNodeObjectDict["d"].NodeIdOfNeighborsOfNodeObjectDict.Add("c", new Node { NodeId = "c" });
             graph[0].NodeIdToNodeObjectDict["c"].NodeIdOfNeighborsOfNodeObjectDict.Add("d", new Node { NodeId = "d" });
-            graph[0].NodeIdToNodeObjectDict["a"].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
+            graph[0].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
             {
                 EdgeId = "a-b",
                 NodeA = graph[0].NodeIdToNodeObjectDict["a"],
                 NodeB = graph[0].NodeIdToNodeObjectDict["b"]
             });
-            graph[0].NodeIdToNodeObjectDict["b"].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
-            {
-                EdgeId = "a-b",
-                NodeA = graph[0].NodeIdToNodeObjectDict["a"],
-                NodeB = graph[0].NodeIdToNodeObjectDict["b"]
-            });
-            graph[0].NodeIdToNodeObjectDict["b"].EdgeIdToEdgeObjectDict.Add("b-c", new Edge
+            graph[0].EdgeIdToEdgeObjectDict.Add("b-c", new Edge
             {
                 EdgeId = "b-c",
                 NodeA = graph[0].NodeIdToNodeObjectDict["b"],
                 NodeB = graph[0].NodeIdToNodeObjectDict["c"]
             });
-            graph[0].NodeIdToNodeObjectDict["c"].EdgeIdToEdgeObjectDict.Add("b-c", new Edge
-            {
-                EdgeId = "b-c",
-                NodeA = graph[0].NodeIdToNodeObjectDict["b"],
-                NodeB = graph[0].NodeIdToNodeObjectDict["c"]
-            });
-            graph[0].NodeIdToNodeObjectDict["a"].EdgeIdToEdgeObjectDict.Add("a-c", new Edge
+            graph[0].EdgeIdToEdgeObjectDict.Add("a-c", new Edge
             {
                 EdgeId = "a-c",
                 NodeA = graph[0].NodeIdToNodeObjectDict["a"],
                 NodeB = graph[0].NodeIdToNodeObjectDict["c"]
             });
-            graph[0].NodeIdToNodeObjectDict["c"].EdgeIdToEdgeObjectDict.Add("a-c", new Edge
-            {
-                EdgeId = "a-c",
-                NodeA = graph[0].NodeIdToNodeObjectDict["a"],
-                NodeB = graph[0].NodeIdToNodeObjectDict["c"]
-            });
-            graph[0].NodeIdToNodeObjectDict["c"].EdgeIdToEdgeObjectDict.Add("c-d", new Edge
-            {
-                EdgeId = "c-d",
-                NodeA = graph[0].NodeIdToNodeObjectDict["c"],
-                NodeB = graph[0].NodeIdToNodeObjectDict["d"]
-            });
-            graph[0].NodeIdToNodeObjectDict["d"].EdgeIdToEdgeObjectDict.Add("c-d", new Edge
+            graph[0].EdgeIdToEdgeObjectDict.Add("c-d", new Edge
             {
                 EdgeId = "c-d",
                 NodeA = graph[0].NodeIdToNodeObjectDict["c"],
@@ -347,19 +325,14 @@ namespace mabuse.UnitTest
             });
             graph[365].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
             graph[365].NodeIdToNodeObjectDict.Add("b", new Node { NodeId = "b" });
-            graph[365].NodeIdToNodeObjectDict["a"].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
+            graph[365].NodeIdToNodeObjectDict["a"].NodeIdOfNeighborsOfNodeObjectDict.Add("b", new Node { NodeId = "b" });
+            graph[365].NodeIdToNodeObjectDict["b"].NodeIdOfNeighborsOfNodeObjectDict.Add("a", new Node { NodeId = "a" });
+            graph[365].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
             {
                 EdgeId = "a-b",
                 NodeA = graph[0].NodeIdToNodeObjectDict["a"],
                 NodeB = graph[0].NodeIdToNodeObjectDict["b"]
             });
-            graph[365].NodeIdToNodeObjectDict["b"].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
-            {
-                EdgeId = "a-b",
-                NodeA = graph[0].NodeIdToNodeObjectDict["a"],
-                NodeB = graph[0].NodeIdToNodeObjectDict["b"]
-            });
-
             ReportFactory reportFactory = new ReportFactory(graph);
             int maxCount = reportFactory.GetMaxNumberOfCommonNeighbor();
             int expect = 1;
@@ -378,10 +351,20 @@ namespace mabuse.UnitTest
                 { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
-            ;
             ReportFactory reportFactory = new ReportFactory(graph);
+            var ex = Assert.Throws<Exception>(() => reportFactory.CountDegreeWithInterval(graph[0]));
+            Assert.That(ex.Message, Is.EqualTo($"Negative counting found value: {int.MinValue}"));
+            graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
+            graph[0].NodeIdToNodeObjectDict.Add("b", new Node { NodeId = "b" });
+            graph[0].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
+            {
+                EdgeId = "a-b",
+                NodeA = graph[0].NodeIdToNodeObjectDict["a"],
+                NodeB = graph[0].NodeIdToNodeObjectDict["b"]
+            });
             int[] countDeg = reportFactory.CountPartner(graph[0]);
             int[] expect = new int[10];
+            expect[0] = 1;
             Assert.AreEqual(countDeg, expect);
         }
 

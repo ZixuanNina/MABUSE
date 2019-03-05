@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CuttingEdge.Conditions;
 using mabuse.datamode;
 
 namespace mabuse
@@ -16,6 +17,12 @@ namespace mabuse
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
         public ReportFactory(Dictionary<double, Graph> Graphs) 
         {
+            //input parameter condition check
+            Condition.Requires(Graphs, "graph dictionary")
+                .IsNotNull()
+                .IsNotEmpty()
+                .IsOfType(GraphTimeToGraphObjectDict.GetType());
+
             GraphTimeToGraphObjectDict = Graphs;
         }
         /// <summary>
@@ -42,6 +49,10 @@ namespace mabuse
         /// <param name="max">Max.</param>
         public int[] GetIntervalOfTheDistribution(int max)
         {
+            //input parameter condition check
+            Condition.Requires(max, "max value")
+                .IsGreaterOrEqual(0);
+
             int num = 10;
             if(max < 0)
             {
@@ -84,6 +95,10 @@ namespace mabuse
         /// <param name="graph">Graph.</param>
         public int[] CountDegreeWithInterval(Graph graph)
         {
+            //input parameter condition check
+            Condition.Requires(graph, "graph")
+                .IsNotNull();
+
             int[] countDegree = new int[10];
             int[] range = GetIntervalOfTheDistribution(GetMaxDegree());
 
@@ -127,6 +142,10 @@ namespace mabuse
         /// <param name="graph">Graph.</param>
         public int[] CountPartner(Graph graph)
         {
+            //input parameter condition check
+            Condition.Requires(graph, "graph")
+                .IsNotNull();
+
             int[] countPartner = new int[10];
             int[] range = GetIntervalOfTheDistribution(GetMaxNumberOfCommonNeighbor());
 

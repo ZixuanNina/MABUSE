@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CuttingEdge.Conditions;
 using mabuse.datamode;
 
 
@@ -47,6 +48,10 @@ namespace mabuse
         /// <param name="pathOfFile">Path to the trace file to be parsed.</param>
         public Parser(string pathOfFile)
         {
+            //input parameter condition check
+            Condition.Requires(pathOfFile, "path Of File")
+                .IsNotNullOrEmpty()        // throws ArgumentNullException or ArgumentEmptyException on failure
+                .EndsWith(".txt");         // throws the wrong file format input AugumentException
             FileParsing(pathOfFile);
         }
 
@@ -56,6 +61,11 @@ namespace mabuse
         /// <param name="filePath"> Path to the trace file.</param>
         private void FileParsing(string filePath)
         {
+            //input parameter condition check
+            Condition.Requires(filePath, "path Of File for the parsing function")
+                .IsNotNullOrEmpty()        // throws ArgumentNullException or ArgumentEmptyException on failure
+                .EndsWith(".txt");         // throws the wrong file format input AugumentException
+
             int CountLine = 0;
             double timeInterVal = 365;
             double TimeAtLine = 0;
@@ -85,6 +95,8 @@ namespace mabuse
                         Graph NextGraph = new Graph { GraphStartTime = timeTmp - 365, GraphEndTime = timeTmp };
                         GraphTimeToGraphObjectDict.Add(timeTmp, NextGraph);
                         StoreNodesAndEdgesFromPreviousInterval(CurrentGraph);
+                        //check if graph information updated
+                        Condition.Ensures(CurrentGraph, "the current time graph").IsNotNull();
                         countGainNode = countLostNode = countGainEdge = countLostEdge = 0;
                         GraphTime = timeTmp;
                         CurrentGraph = NextGraph;
@@ -93,12 +105,18 @@ namespace mabuse
                     {
                         case "add node":
                             AddNode(LineTokens[3], TimeAtLine);
+                            Condition.Ensures(CurrentSetOfNodesInSimulation.Keys, "current node dictionary")
+                                .Contains(LineTokens[3])
+                                .IsNotEmpty();
                             break;
                         case "remove node":
                             RemoveNode(LineTokens[3], TimeAtLine);
                             break;
                         case "add edge":
                             AddEdge(LineTokens[4], LineTokens[5], TimeAtLine);
+                            Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "current edge dictionary")
+                                 .Contains(LineTokens[4] + "-" + LineTokens[5])
+                                 .IsNotEmpty();
                             break;
                         case "remove edge":
                             RemoveEdge(LineTokens[4], LineTokens[5], TimeAtLine);
@@ -130,9 +148,9 @@ namespace mabuse
             //add edges to edge list
             AddEdgeToGivenEdgeDic();
             //add nodes to node list
-            AddNodeTONodeDic();
+            AddNodeToNodeDic();
             //add edges to the nodes
-            AddEdgeAndNeighborToTheNide();
+            AddEdgeAndNeighborToTheNode();
         }
 
         /// <summary>
@@ -141,6 +159,15 @@ namespace mabuse
         /// <param name="ThisGraph"></param>
         private void StoreNodesAndEdgesFromPreviousInterval(Graph ThisGraph)
         {
+            //input parameter condition check
+            Condition.Requires(ThisGraph, "The graph storing information to")
+                .IsNotNull();
+            Condition.Requires(ThisGraph.NodeIdToNodeObjectDict, "The Node list in this graph")
+                .DoesNotContainAny(CurrentSetOfNodesInSimulation)
+                .IsEmpty();
+            Condition.Requires(ThisGraph.EdgeIdToEdgeObjectDict, "The Edge list in this graph")
+                .DoesNotContainAny(CurrentSetOfEdgesInSimulation)
+                .IsEmpty();
             ThisGraph.CountGainEdge = countGainEdge;
             ThisGraph.CountLostEdge = countLostEdge;
             ThisGraph.CountGainNode = countGainNode;
@@ -161,12 +188,16 @@ namespace mabuse
                 ThisGraph.EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
             }
         }
+
         /// <summary>
         /// Adds the edge to graph node.
         /// </summary>
         /// <param name="node">Node.</param>
         public void AddRelatedEdgesToGivenNode(Node node)
         {
+            Condition.Requires(node, "object node")
+                .IsNotNull()
+                .IsOfType(node.GetType());
             foreach (Edge edge in CurrentSetOfNodesInSimulation[node.NodeId].EdgeIdToEdgeObjectDict.Values)
             {
                 if (!GraphTimeToGraphObjectDict[GraphTime].NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId))
@@ -208,6 +239,12 @@ namespace mabuse
         /// <param name="time">Time.</param>
         private void AddNode(string node, double time)
         {
+            //input parameter condition check
+            Condition.Requires(node, "node to add")
+                .IsNotNullOrEmpty();
+            Condition.Requires(time, "time the node add to graph")
+                .IsInRange(GraphTimeToGraphObjectDict[GraphTime].GraphStartTime, GraphTimeToGraphObjectDict[GraphTime].GraphEndTime)
+                .IsNotNaN();
             //increment the gained node
             countGainNode++;
             //add node set the start time
@@ -225,6 +262,14 @@ namespace mabuse
         /// <param name="time">Time.</param>/
         private void RemoveNode(string node, double time)
         {
+            //input parameter condition check
+            Condition.Requires(node, "node to remove")
+                .IsNotNullOrEmpty();
+            Condition.Requires(time, "time the node removed from graph")
+                .IsInRange(GraphTimeToGraphObjectDict[GraphTime].GraphStartTime, GraphTimeToGraphObjectDict[GraphTime].GraphEndTime)
+                .IsNotNaN();
+            Condition.Requires(NodeIdToNodeObjectDict.Keys, "the node list")
+                .DoesNotContain(node);
             //increment lose node
             countLostNode++;
             //set the condition of the node
@@ -284,6 +329,14 @@ namespace mabuse
         /// <param name="time">Time.</param>
         private void AddEdge(string nodeA, string nodeB, double time)
         {
+            //input parameter condition check
+            Condition.Requires(nodeA, "nodeA of the edge to add")
+                .IsNotNullOrEmpty();
+            Condition.Requires(nodeB, "nodeB of the edge to add")
+                .IsNotNullOrEmpty();
+            Condition.Requires(time, "time the edge add to graph")
+                .IsInRange(GraphTimeToGraphObjectDict[GraphTime].GraphStartTime, GraphTimeToGraphObjectDict[GraphTime].GraphEndTime)
+                .IsNotNaN();
             if (!(CurrentSetOfEdgesInSimulation.ContainsKey(nodeA + "-" + nodeB)) && !(CurrentSetOfEdgesInSimulation.ContainsKey(nodeB + "-" + nodeA)))
             {
                 //increment gain edge
@@ -343,6 +396,17 @@ namespace mabuse
         /// <param name="time">Time.</param>
         private void RemoveEdge(string nodeA, string nodeB, double time)
         {
+            //input parameter condition check
+            Condition.Requires(nodeA, "nodeA of the edge to Remove")
+                .IsNotNullOrEmpty();
+            Condition.Requires(nodeB, "nodeB of the edge to Remove")
+                .IsNotNullOrEmpty();
+            Condition.Requires(time, "time the edge removed from graph")
+                .IsInRange(GraphTimeToGraphObjectDict[GraphTime].GraphStartTime, GraphTimeToGraphObjectDict[GraphTime].GraphEndTime)
+                .IsNotNaN();
+            Condition.Requires(CurrentSetOfEdgesInSimulation.Keys, "the current simulation of graph")
+                .Contains(nodeA + "-" + nodeB)
+                .IsNotEmpty();
             if (CurrentSetOfEdgesInSimulation.ContainsKey(nodeA + "-" + nodeB) && !EdgeIdToEdgeObjectDict.ContainsKey(nodeA + "-" + nodeB))
             {
                 //increment lost edge
@@ -391,7 +455,7 @@ namespace mabuse
         /// <summary>
         /// Adds the node to Node dictionary with the node Id.
         /// </summary>
-         private void AddNodeTONodeDic()
+         private void AddNodeToNodeDic()
         {
             foreach (Node node in CurrentSetOfNodesInSimulation.Values)
             {
@@ -408,7 +472,7 @@ namespace mabuse
         /// <summary>
         /// Adds the related edge and neighbor to the node.
         /// </summary>
-         private void AddEdgeAndNeighborToTheNide()
+         private void AddEdgeAndNeighborToTheNode()
         {
 
             foreach (Node node in NodeIdToNodeObjectDict.Values)

@@ -1,4 +1,6 @@
-﻿namespace mabuse
+﻿using CuttingEdge.Conditions;
+
+namespace mabuse
 {
     /// <summary>
     /// Prograpm compile and run the project ot get the report of MABUSE data.
@@ -10,6 +12,11 @@
     {
         public static void Main(string[] args)
         {
+            //input parameter condition check
+            Condition.Requires(args, "arguments")
+                .IsNotNull()            // throw AgumentNullException if there is no input
+                .IsNotEmpty()
+                .IsLongerOrEqual(2);    // throw AugumentException due to missing input information
             Compiler(args[0], args[1]);
         }
 
@@ -20,7 +27,19 @@
         /// <param name="pathToFile">Path to file.</param>
         private static void Compiler(string pathOfFile, string pathToFile)
         {
+            //input parameter condition check
+            Condition.Requires(pathOfFile, "path of file for reading")
+                .IsNotNullOrEmpty()
+                .EndsWith(".txt")
+                .IsNotNullOrWhiteSpace();
+            Condition.Requires(pathToFile, "path to write to the file")
+                .IsNotNullOrEmpty()
+                .EndsWith(".txt")
+                .IsNotNullOrWhiteSpace();
             Parser parser = new Parser(pathOfFile);
+            Condition.Ensures(parser.GetGraphTimeToGraphDictionary(), "graph creat by parser")
+                .IsNotNull()
+                .IsNotEmpty();
             ReportFactory result = new ReportFactory(parser.GetGraphTimeToGraphDictionary());
             ReportWriter writer = new ReportWriter(result,pathToFile);
         }

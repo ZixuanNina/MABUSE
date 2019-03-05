@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CuttingEdge.Conditions;
 
 namespace mabuse.datamode
 {
@@ -45,6 +46,14 @@ namespace mabuse.datamode
         /// <param name="nodeB">Node b.</param>
         public int CountNumberOfPatnerwiseNeighbors(Node nodeA, Node nodeB)
         {
+            //input parameter condition check
+            Condition.Requires(nodeA, "nodeA")
+                .IsOfType(nodeB.GetType())
+                .IsNotNull();
+            Condition.Requires(nodeB, "nodeB")
+                .IsOfType(nodeA.GetType())
+                .IsNotNull();
+
             int count = 0;
             foreach (Node node in NodeIdToNodeObjectDict[nodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Values)
             {

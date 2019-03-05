@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CuttingEdge.Conditions;
 using mabuse.datamode;
 
 namespace mabuse
@@ -15,6 +16,14 @@ namespace mabuse
         public Dictionary<double, Graph> graphList = new Dictionary<double, Graph>();
         public ReportWriter(ReportFactory result, string filePath)
         {
+            //input parameter condition check
+            Condition.Requires(result, "the analyzed result")
+                .IsNotNull();
+            Condition.Requires(filePath, "path of file to write to")
+                .IsNotEmpty()
+                .IsNotNull()
+                .EndsWith(".txt");
+
             graphList = result.GraphTimeToGraphObjectDict;
             string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
             System.IO.File.WriteAllLines(@filePath, lines);
@@ -64,6 +73,10 @@ namespace mabuse
         /// <param name="result">Result.</param>
         private string SectionThree(ReportFactory result)
         {
+            //input parameter condition check
+            Condition.Requires(result, "the analyzed result")
+                   .IsNotNull();
+
             string table = "Degree distribution\n" + "Section3: \n";
             int[] interval = result.GetIntervalOfTheDistribution(result.GetMaxDegree());
             table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
