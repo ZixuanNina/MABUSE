@@ -31,15 +31,8 @@ namespace mabuse
         /// </summary>
         public Dictionary<double, Graph> GetGraphTimeToGraphDictionary()
         {
-            return GraphTimeToGraphObjectDict;
-        }
 
-        /// <summary>
-        /// Get a dictionary map from the string node id to the node object.
-        /// </summary>
-        public Dictionary<string, Node> GetNodeIdToNodeDictionary()
-        {
-            return NodeIdToNodeObjectDict;
+            return GraphTimeToGraphObjectDict;
         }
 
         /// <summary>
@@ -71,6 +64,11 @@ namespace mabuse
             double TimeAtLine = 0;
             GraphTime = 0;
             string[] lines = File.ReadAllLines(filePath);
+
+            Condition.Ensures(lines, "lines in file")
+                .IsNotEmpty()
+                .IsLongerThan(0);
+
             Graph CurrentGraph = new Graph { GraphStartTime = 0, GraphEndTime = 0 };
             GraphTimeToGraphObjectDict.Add(0, CurrentGraph);
             int CurrentYear = 0;
@@ -137,14 +135,13 @@ namespace mabuse
                     {
                         throw new Exception("Missing node information at line: " + CountLine);
                     }
-                    else
-                    {
                         Console.WriteLine("Parse file complete.");
-                    }
                 }
             }
             //storing the last information for the last interval/day of report
             StoreNodesAndEdgesFromPreviousInterval(CurrentGraph);
+            //check if graph information updated
+            Condition.Ensures(CurrentGraph, "the current time graph").IsNotNull();
             //add edges to edge list
             AddEdgeToGivenEdgeDic();
             //add nodes to node list
@@ -193,11 +190,12 @@ namespace mabuse
         /// Adds the edge to graph node.
         /// </summary>
         /// <param name="node">Node.</param>
-        public void AddRelatedEdgesToGivenNode(Node node)
+        private void AddRelatedEdgesToGivenNode(Node node)
         {
             Condition.Requires(node, "object node")
                 .IsNotNull()
                 .IsOfType(node.GetType());
+
             foreach (Edge edge in CurrentSetOfNodesInSimulation[node.NodeId].EdgeIdToEdgeObjectDict.Values)
             {
                 if (!GraphTimeToGraphObjectDict[GraphTime].NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId))
@@ -253,6 +251,10 @@ namespace mabuse
                 NodeId = node, 
                 NodeStartTime = time 
             });
+
+            Condition.Ensures(CurrentSetOfNodesInSimulation.Keys, "current node simulation dictionary")
+                .Contains(node)
+                .IsNotEmpty();
         }
 
         /// <summary>
@@ -319,6 +321,9 @@ namespace mabuse
             CurrentSetOfNodesInSimulation[node].EdgeIdToEdgeObjectDict.Clear();
             CurrentSetOfNodesInSimulation[node].NodeIdOfNeighborsOfNodeObjectDict.Clear();
             CurrentSetOfNodesInSimulation.Remove(node);
+
+            Condition.Ensures(CurrentSetOfNodesInSimulation.Keys, "current node simulation dictionary")
+                .DoesNotContain(node);
         }
 
         /// <summary>
@@ -420,9 +425,12 @@ namespace mabuse
                     EdgeStartTime = CurrentSetOfEdgesInSimulation[nodeA + "-" + nodeB].EdgeStartTime, 
                     EdgeEndTime = time 
                 });
+
+                Condition.Ensures(EdgeIdToEdgeObjectDict.Keys, "Edge dictionary")
+                    .Contains(nodeA + "-" + nodeB)
+                    .IsNotEmpty();
+
                 //remove neighbor
-
-
                 CurrentSetOfNodesInSimulation[nodeA].NodeIdOfNeighborsOfNodeObjectDict.Remove(nodeB);
                 CurrentSetOfNodesInSimulation[nodeB].NodeIdOfNeighborsOfNodeObjectDict.Remove(nodeA);
                 //remove edge to the node
@@ -431,6 +439,11 @@ namespace mabuse
                 //edge remove
                 CurrentSetOfEdgesInSimulation.Remove(nodeA + "-" + nodeB);
             }
+
+            Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "Current simulation of edge dictionary")
+                .DoesNotContain(nodeA + "-" + nodeB);
+
+
         }
 
         /// <summary>
@@ -450,6 +463,9 @@ namespace mabuse
                     EdgeEndTime = int.MaxValue
                 });
             }
+            Condition.Ensures(EdgeIdToEdgeObjectDict.Keys, "Edge dictionary")
+                .ContainsAll(CurrentSetOfEdgesInSimulation.Keys)
+                .IsNotEmpty();
         }
 
         /// <summary>
@@ -467,6 +483,9 @@ namespace mabuse
                     NodeEndTime = int.MaxValue
                 });
             }
+            Condition.Ensures(NodeIdToNodeObjectDict.Keys, "Node dictionary")
+                .ContainsAll(CurrentSetOfNodesInSimulation.Keys)
+                .IsNotEmpty();
         }
 
         /// <summary>

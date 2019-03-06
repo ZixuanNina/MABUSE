@@ -31,6 +31,8 @@ namespace mabuse.datamode
             foreach (Node node in NodeIdToNodeObjectDict.Values)
             {
                 degree = node.EdgeIdToEdgeObjectDict.Count;
+                Condition.Ensures(degree, "degree")
+                    .IsNotLessThan(0);
                 if(degree > maxDegree)
                 {
                     maxDegree = degree;
@@ -57,11 +59,17 @@ namespace mabuse.datamode
             int count = 0;
             foreach (Node node in NodeIdToNodeObjectDict[nodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Values)
             {
-                if (!nodeB.NodeId.Equals(node.NodeId) && NodeIdToNodeObjectDict[nodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict.ContainsKey(node.NodeId))
+                if (!nodeB.NodeId.Equals(node.NodeId) 
+                    && NodeIdToNodeObjectDict[nodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict.ContainsKey(node.NodeId))
                 {
                     count++;
                 }
             }
+
+            Condition.Ensures(count, "count of parterwise neighbors of the edge")
+                .IsGreaterOrEqual(0)
+                .IsInRange(0, NodeIdToNodeObjectDict[nodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Count);
+
             return count;
         }
         /// <summary>
@@ -75,11 +83,17 @@ namespace mabuse.datamode
             foreach (Edge edge in EdgeIdToEdgeObjectDict.Values)
             {
                 count = CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB);
+
+                Condition.Ensures(count, "count of parterwise neighbors of the edge")
+                    .IsGreaterOrEqual(0)
+                    .IsInRange(0, edge.NodeA.NodeIdOfNeighborsOfNodeObjectDict.Count);
+
                 if (count > maxCount)
                 {
                     maxCount = count;
                 }
             }
+
             return maxCount;
         }
     }

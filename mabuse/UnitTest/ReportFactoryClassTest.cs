@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System;
+using CuttingEdge.Conditions;
 
 namespace mabuse.UnitTest
 {
@@ -103,8 +104,10 @@ namespace mabuse.UnitTest
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
             };
             ReportFactory reportFactory = new ReportFactory(graph);
+            
             var ex = Assert.Throws<Exception>(() => reportFactory.GetIntervalOfTheDistribution(-1));
             Assert.That(ex.Message, Is.EqualTo("Negative counting found value: -1"));
 

@@ -40,6 +40,7 @@ namespace mabuse
                     maxValOfDegrees = max;
                 }
             }
+
             return maxValOfDegrees;
         }
         /// <summary>
@@ -50,8 +51,6 @@ namespace mabuse
         public int[] GetIntervalOfTheDistribution(int max)
         {
             //input parameter condition check
-            Condition.Requires(max, "max value")
-                .IsGreaterOrEqual(0);
 
             int num = 10;
             if(max < 0)
