@@ -2,8 +2,8 @@ MABUSE Report
 
 This report output the graph data based on the time of the simulation with 365 days a cycle. 
 
-Report Date: Tuesday, March 5, 2019
-Report Time: 6:33:54 PM
+Report Date: Wednesday, March 6, 2019
+Report Time: 5:40:50 PM
 
 
 365 day time step

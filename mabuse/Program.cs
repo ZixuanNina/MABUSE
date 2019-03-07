@@ -1,4 +1,5 @@
 ﻿using CuttingEdge.Conditions;
+using System;
 
 namespace mabuse
 {
@@ -17,6 +18,7 @@ namespace mabuse
                 .IsNotNull()            // throw AgumentNullException if there is no input
                 .IsNotEmpty()
                 .IsLongerOrEqual(2);    // throw AugumentException due to missing input information
+
             Compiler(args[0], args[1]);
         }
 
@@ -36,11 +38,18 @@ namespace mabuse
                 .IsNotNullOrEmpty()
                 .EndsWith(".txt")
                 .IsNotNullOrWhiteSpace();
+
             Parser parser = new Parser(pathOfFile);
+
             Condition.Ensures(parser.GetGraphTimeToGraphDictionary(), "graph creat by parser")
                 .IsNotNull()
                 .IsNotEmpty();
+
             ReportFactory result = new ReportFactory(parser.GetGraphTimeToGraphDictionary());
+
+            Condition.Ensures(result, "result of parser")
+                .IsNotNull();
+
             ReportWriter writer = new ReportWriter(result,pathToFile);
         }
     }

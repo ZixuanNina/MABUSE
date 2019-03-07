@@ -4,6 +4,9 @@ using mabuse.datamode;
 
 namespace mabuse.UnitTest
 {
+    /// <summary>
+    /// Graph class test.
+    /// </summary>
     [TestFixture()]
     public class GraphClassTest
     {

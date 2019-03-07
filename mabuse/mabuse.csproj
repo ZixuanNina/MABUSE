@@ -50,6 +50,7 @@
     <Compile Include="UnitTest\GraphClassTest.cs" />
     <Compile Include="UnitTest\ReportFactoryClassTest.cs" />
     <Compile Include="UnitTest\ReprtWriterClassTest.cs" />
+    <Compile Include="UnitTest\ParserClassTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />

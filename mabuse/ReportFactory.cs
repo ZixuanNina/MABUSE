@@ -51,6 +51,8 @@ namespace mabuse
         public int[] GetIntervalOfTheDistribution(int max)
         {
             //input parameter condition check
+            Condition.Requires(max, "max value")
+                .IsGreaterOrEqual(0);
 
             int num = 10;
             if(max < 0)
@@ -85,6 +87,11 @@ namespace mabuse
                     ranges[9] = 10 * interval + reminder;
                 }
             }
+            Condition.Ensures(ranges, "ranges")
+                .IsNotEmpty()
+                .IsNotNull()
+                .HasLength(10);
+
             return ranges;
         }
         /// <summary>
@@ -115,6 +122,12 @@ namespace mabuse
                     }
                 }
             }
+            Condition.Ensures(countDegree, "counting list of degree distribution")
+                .HasLength(10)
+                .IsNotNull()
+                .IsNotEmpty()
+                .IsOfType(range.GetType());
+
             return  countDegree;
         }
         //get the max value of number of triangle
@@ -163,6 +176,7 @@ namespace mabuse
                     }
                 }
             }
+
             return countPartner;
         }
     }

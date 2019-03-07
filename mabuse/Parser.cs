@@ -45,7 +45,16 @@ namespace mabuse
             Condition.Requires(pathOfFile, "path Of File")
                 .IsNotNullOrEmpty()        // throws ArgumentNullException or ArgumentEmptyException on failure
                 .EndsWith(".txt");         // throws the wrong file format input AugumentException
-            FileParsing(pathOfFile);
+
+            try
+            {
+                File.ReadLines(pathOfFile);
+                FileParsing(pathOfFile);
+            }
+            catch(DirectoryNotFoundException e)
+            {
+                throw new DirectoryNotFoundException(e.Message + " Invalid input file path");
+            }
         }
 
         /// <summary>
@@ -63,6 +72,7 @@ namespace mabuse
             double timeInterVal = 365;
             double TimeAtLine = 0;
             GraphTime = 0;
+
             string[] lines = File.ReadAllLines(filePath);
 
             Condition.Ensures(lines, "lines in file")

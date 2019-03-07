@@ -6,6 +6,9 @@ using CuttingEdge.Conditions;
 
 namespace mabuse.UnitTest
 {
+    /// <summary>
+    /// Report factory class test.
+    /// </summary>
     [TestFixture()]
     public class ReportFactoryClassTest
     {
@@ -108,9 +111,7 @@ namespace mabuse.UnitTest
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             
-            var ex = Assert.Throws<Exception>(() => reportFactory.GetIntervalOfTheDistribution(-1));
-            Assert.That(ex.Message, Is.EqualTo("Negative counting found value: -1"));
-
+            Assert.Throws<ArgumentOutOfRangeException>(() => reportFactory.GetIntervalOfTheDistribution(-1));
         }
 
         //max is in 1-10
@@ -175,8 +176,7 @@ namespace mabuse.UnitTest
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
-            var ex = Assert.Throws<Exception>(() => reportFactory.CountDegreeWithInterval(graph[0]));
-            Assert.That(ex.Message, Is.EqualTo($"Negative counting found value: {int.MinValue}"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reportFactory.CountDegreeWithInterval(graph[0]));
             graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
             int[] count = reportFactory.CountDegreeWithInterval(graph[0]);
             int[] expect = new int[10];
@@ -274,10 +274,8 @@ namespace mabuse.UnitTest
         public void Test_GetMaxNumberOfCommonNeighborEmptyGraph()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>();
-            ReportFactory reportFactory = new ReportFactory(graph);
-            int maxCount = reportFactory.GetMaxNumberOfCommonNeighbor();
-            int expect = int.MinValue;
-            Assert.AreEqual(maxCount, expect);
+            ReportFactory reportFactory;
+            Assert.Throws<ArgumentException>(() => reportFactory = new ReportFactory(graph));
         }
 
         //Test with information in graph
@@ -355,8 +353,8 @@ namespace mabuse.UnitTest
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
-            var ex = Assert.Throws<Exception>(() => reportFactory.CountDegreeWithInterval(graph[0]));
-            Assert.That(ex.Message, Is.EqualTo($"Negative counting found value: {int.MinValue}"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reportFactory.CountDegreeWithInterval(graph[0]));
+
             graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
             graph[0].NodeIdToNodeObjectDict.Add("b", new Node { NodeId = "b" });
             graph[0].EdgeIdToEdgeObjectDict.Add("a-b", new Edge
