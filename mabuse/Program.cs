@@ -45,7 +45,7 @@ namespace mabuse
                 .IsNotNull()
                 .IsNotEmpty();
 
-            ReportFactory result = new ReportFactory(parser.GetGraphTimeToGraphDictionary());
+            ReportFactory result = new ReportFactory(parser);
 
             Condition.Ensures(result, "result of parser")
                 .IsNotNull();

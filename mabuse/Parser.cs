@@ -36,6 +36,15 @@ namespace mabuse
         }
 
         /// <summary>
+        /// Gets the node identifier to node object dictionary.
+        /// </summary>
+        /// <returns>The node identifier to node object dictionary.</returns>
+        public Dictionary<string, Node> GetNodeIdToNodeObjectDictionary()
+        {
+            return NodeIdToNodeObjectDict;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="pathOfFile">Path to the trace file to be parsed.</param>
@@ -122,9 +131,6 @@ namespace mabuse
                             break;
                         case "add edge":
                             AddEdge(LineTokens[4], LineTokens[5], TimeAtLine);
-                            Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "current edge dictionary")
-                                 .Contains(LineTokens[4] + "-" + LineTokens[5])
-                                 .IsNotEmpty();
                             break;
                         case "remove edge":
                             RemoveEdge(LineTokens[4], LineTokens[5], TimeAtLine);
@@ -400,6 +406,10 @@ namespace mabuse
                     throw;
                 }
 
+                Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "Current edge dictionary")
+                    .IsNotNull()
+                    .Contains(nodeA + "-" + nodeB);
+
             }
         }
 
@@ -419,11 +429,11 @@ namespace mabuse
             Condition.Requires(time, "time the edge removed from graph")
                 .IsInRange(GraphTimeToGraphObjectDict[GraphTime].GraphStartTime, GraphTimeToGraphObjectDict[GraphTime].GraphEndTime)
                 .IsNotNaN();
-            Condition.Requires(CurrentSetOfEdgesInSimulation.Keys, "the current simulation of graph")
-                .Contains(nodeA + "-" + nodeB)
-                .IsNotEmpty();
             if (CurrentSetOfEdgesInSimulation.ContainsKey(nodeA + "-" + nodeB) && !EdgeIdToEdgeObjectDict.ContainsKey(nodeA + "-" + nodeB))
             {
+                Condition.Requires(CurrentSetOfEdgesInSimulation.Keys, "the current simulation of graph")
+                    .Contains(nodeA + "-" + nodeB)
+                    .IsNotEmpty();
                 //increment lost edge
                 countLostEdge++;
                 //set the condition of the edge
@@ -449,11 +459,6 @@ namespace mabuse
                 //edge remove
                 CurrentSetOfEdgesInSimulation.Remove(nodeA + "-" + nodeB);
             }
-
-            Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "Current simulation of edge dictionary")
-                .DoesNotContain(nodeA + "-" + nodeB);
-
-
         }
 
         /// <summary>

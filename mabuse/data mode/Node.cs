@@ -16,5 +16,18 @@ namespace mabuse.datamode
         public Dictionary<string, Edge> EdgeIdToEdgeObjectDict = new Dictionary<string, Edge>();
         public Dictionary<string, Node> NodeIdOfNeighborsOfNodeObjectDict = new Dictionary<string, Node>();
 
+        public int CountDegree(double EndTime)
+        {
+            int count = 0;
+            foreach(Edge edge in EdgeIdToEdgeObjectDict.Values)
+            {
+                if(edge.EdgeEndTime >= EndTime && edge.EdgeStartTime <= EndTime)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
     }
 }

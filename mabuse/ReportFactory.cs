@@ -15,16 +15,25 @@ namespace mabuse
     public class ReportFactory
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
-        public ReportFactory(Dictionary<double, Graph> Graphs) 
+        public Dictionary<string, Node> NodeIdToNodeObjectDict = new Dictionary<string, Node>();
+
+        public ReportFactory(Dictionary<double,Graph> graph)
+        {
+            Condition.Requires(graph, "graph of Test")
+                .IsNotNull();
+
+            GraphTimeToGraphObjectDict = graph;
+        }
+        public ReportFactory(Parser parser)
         {
             //input parameter condition check
-            Condition.Requires(Graphs, "graph dictionary")
-                .IsNotNull()
-                .IsNotEmpty()
-                .IsOfType(GraphTimeToGraphObjectDict.GetType());
+            Condition.Requires(parser, "Result of Parser")
+                .IsNotNull();
 
-            GraphTimeToGraphObjectDict = Graphs;
+            GraphTimeToGraphObjectDict = parser.GetGraphTimeToGraphDictionary();
+            NodeIdToNodeObjectDict = parser.GetNodeIdToNodeObjectDictionary();
         }
+
         /// <summary>
         /// Gets the maximum number of degree of the nodes.
         /// </summary>
@@ -178,6 +187,23 @@ namespace mabuse
             }
 
             return countPartner;
+        }
+
+        public Dictionary<string, int[]> GetNodeDegrees()
+        {
+            Dictionary<String, int[]> NodeIdToItsDegree = new Dictionary<string, int[]>();
+            foreach(Node node in NodeIdToNodeObjectDict.Values)
+            {
+                int[] countDegreeByTime = new int[GraphTimeToGraphObjectDict.Count];
+                int i = 0;
+                foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
+                {
+                    countDegreeByTime[i] = node.CountDegree(graph.GraphEndTime);
+                    i++;
+                }
+                NodeIdToItsDegree.Add(node.NodeId, countDegreeByTime);
+            }
+            return NodeIdToItsDegree;
         }
     }
 }

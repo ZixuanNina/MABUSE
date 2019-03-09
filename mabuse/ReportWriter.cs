@@ -13,7 +13,7 @@ namespace mabuse
     /// </author>
     public class ReportWriter
     {
-        public Dictionary<double, Graph> graphList = new Dictionary<double, Graph>();
+        public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
         public ReportWriter(ReportFactory result, string filePath)
         {
             //input parameter condition check
@@ -24,8 +24,9 @@ namespace mabuse
                 .IsNotNull()
                 .EndsWith(".txt");
 
-            graphList = result.GraphTimeToGraphObjectDict;
-            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
+            GraphTimeToGraphObjectDict = result.GraphTimeToGraphObjectDict;
+
+            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result), SectionFive(result)};
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
@@ -60,10 +61,10 @@ namespace mabuse
             "the # of nodes gained over the last 365-day interval",
             "the # of nodes lost over the last 365-day interval");
 
-            Condition.Requires(graphList, "list of graph to report")
+            Condition.Requires(GraphTimeToGraphObjectDict, "list of graph to report")
                 .IsNotEmpty();
 
-            foreach (Graph graph in graphList.Values)
+            foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
             {
                 table += string.Format("{0,-15} {1,-41} {2,-41} {3,-52} {4,-54} {5,-54} {6,-54}\n",
                 graph.GraphEndTime, graph.NodeIdToNodeObjectDict.Count, graph.EdgeIdToEdgeObjectDict.Count, graph.CountLostEdge, graph.CountGainEdge,
@@ -97,7 +98,7 @@ namespace mabuse
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4],interval[4] + "-" + interval[5], 
                 interval[5] + "-" + interval[6], interval[6] + "-" + interval[7],interval[7] + "-" + interval[8], 
                 interval[8] + "-" + interval[9]);
-                foreach(Graph graph in graphList.Values)
+                foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
                 {
                     int[] countDeg = result.CountDegreeWithInterval(graph);
                     
@@ -122,6 +123,9 @@ namespace mabuse
         /// <param name="result">Result.</param>
         private string SectionFour(ReportFactory result)
         {
+            Condition.Requires(result, "result")
+                .IsNotNull();
+
             string table = "Edgewise shared partner distribution\n"+"Section4: \n";
             int[] interval = result.GetIntervalOfTheDistribution(result.GetMaxNumberOfCommonNeighbor());
 
@@ -135,7 +139,7 @@ namespace mabuse
                 interval[2] + "-" + interval[3], interval[3] + "-" + interval[4], interval[4] + "-" + interval[5],
                 interval[5] + "-" + interval[6], interval[6] + "-" + interval[7], interval[7] + "-" + interval[8],
                 interval[8] + "-" + interval[9]);
-            foreach (Graph graph in graphList.Values)
+            foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
             {
                 int[] countPartner = result.CountPartner(graph);
 
@@ -150,6 +154,32 @@ namespace mabuse
             }
             Condition.Ensures(table, "section four report")
                 .IsNotNullOrEmpty();
+            return table;
+        }
+
+        private string SectionFive(ReportFactory result)
+        {
+            Condition.Requires(result, "Result")
+                .IsNotNull();
+
+            string table = "Node degree Report\n Section5: \n";
+            string title = string.Format("{0, -40}", "Node Id");
+            foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
+            {
+                title += string.Format("{0,-10}",graph.GraphEndTime);
+            }
+            table += title + "";
+
+            Dictionary<string, int[]> NodeIsNodeIdToItsDegree = result.GetNodeDegrees();
+
+            foreach(string id in NodeIsNodeIdToItsDegree.Keys)
+            {
+                table += string.Format("\n{0, -40}", id);
+                foreach(int count in NodeIsNodeIdToItsDegree[id])
+                {
+                    table += string.Format("{0,-10}",count);
+                }
+            }
             return table;
         }
     }
