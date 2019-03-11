@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CuttingEdge.Conditions;
 
 namespace mabuse.datamode
 {
@@ -18,6 +19,10 @@ namespace mabuse.datamode
 
         public int CountDegree(double EndTime)
         {
+            Condition.Requires(EndTime, "time to evaluate for counting")
+                .IsNotNaN()
+                .IsGreaterOrEqual(0);
+
             int count = 0;
             foreach(Edge edge in EdgeIdToEdgeObjectDict.Values)
             {
