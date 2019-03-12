@@ -29,7 +29,7 @@ namespace mabuse.UnitTest
                 });
             }
             int count = TestNodeDic["a"].CountDegree(0);
-            int expect = 0;
+            int expect = 1;
             Assert.AreEqual(count, expect);
             count = TestNodeDic["a"].CountDegree(5);
             expect = 3;
@@ -42,11 +42,16 @@ namespace mabuse.UnitTest
         [Test()]
         public void Test_CountDegreeNegtive()
         {
-            Dictionary<string, Node> TestNodeDic = new Dictionary<string, Node>();
-            TestNodeDic.Add("a", new Node
+            Dictionary<string, Node> TestNodeDic = new Dictionary<string, Node>
             {
-                NodeId = "a",
-            });
+                {
+                    "a",
+                    new Node
+                    {
+                        NodeId = "a",
+                    }
+                }
+            };
             Assert.Throws<ArgumentOutOfRangeException>(() => TestNodeDic["a"].CountDegree(-1));
         }
     }

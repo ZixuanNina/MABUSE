@@ -112,11 +112,16 @@ namespace mabuse
                         Graph NextGraph = new Graph { GraphStartTime = timeTmp - 365, GraphEndTime = timeTmp };
                         GraphTimeToGraphObjectDict.Add(timeTmp, NextGraph);
                         StoreNodesAndEdgesFromPreviousInterval(CurrentGraph);
+
                         //check if graph information updated
                         Condition.Ensures(CurrentGraph, "the current time graph").IsNotNull();
+
                         countGainNode = countLostNode = countGainEdge = countLostEdge = 0;
                         GraphTime = timeTmp;
                         CurrentGraph = NextGraph;
+
+                        Condition.Ensures(CurrentGraph, "the current time graph")
+                            .IsOfType(NextGraph.GetType());
                     }
                     switch (command)
                     {
@@ -156,8 +161,10 @@ namespace mabuse
             }
             //storing the last information for the last interval/day of report
             StoreNodesAndEdgesFromPreviousInterval(CurrentGraph);
+
             //check if graph information updated
             Condition.Ensures(CurrentGraph, "the current time graph").IsNotNull();
+
             //add edges to edge list
             AddEdgeToGivenEdgeDic();
             //add nodes to node list
@@ -181,6 +188,7 @@ namespace mabuse
             Condition.Requires(ThisGraph.EdgeIdToEdgeObjectDict, "The Edge list in this graph")
                 .DoesNotContainAny(CurrentSetOfEdgesInSimulation)
                 .IsEmpty();
+
             ThisGraph.CountGainEdge = countGainEdge;
             ThisGraph.CountLostEdge = countLostEdge;
             ThisGraph.CountGainNode = countGainNode;
@@ -200,6 +208,10 @@ namespace mabuse
             {
                 ThisGraph.EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
             }
+
+            Condition.Ensures(ThisGraph, "Graph that save data")
+                .IsNotNull();
+
         }
 
         /// <summary>
@@ -224,24 +236,14 @@ namespace mabuse
                         NodeA = edge.NodeA,
                         NodeB = edge.NodeB
                     });
-                    if (edge.NodeA.NodeId.Equals(node.NodeId))
+
+                    String NodeId = EdgeNodeIdCatch(node, edge);
+                    GraphTimeToGraphObjectDict[GraphTime].NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(NodeId, new Node
                     {
-                        GraphTimeToGraphObjectDict[GraphTime].NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(edge.NodeB.NodeId, new Node
-                        {
-                            NodeId = edge.NodeB.NodeId,
-                            NodeStartTime = edge.EdgeStartTime,
-                            NodeEndTime = edge.EdgeEndTime
-                        });
-                    }
-                    else
-                    {
-                        GraphTimeToGraphObjectDict[GraphTime].NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(edge.NodeA.NodeId, new Node
-                        {
-                            NodeId = edge.NodeA.NodeId,
-                            NodeStartTime = edge.EdgeStartTime,
-                            NodeEndTime = edge.EdgeEndTime
-                        });
-                    }
+                        NodeId = NodeId,
+                        NodeStartTime = edge.EdgeStartTime,
+                        NodeEndTime = edge.EdgeEndTime
+                    });
                 }
             }
         }
@@ -288,6 +290,7 @@ namespace mabuse
                 .IsNotNaN();
             Condition.Requires(CurrentSetOfNodesInSimulation.Keys, "the node list")
                 .Contains(node);
+
             //increment lose node
             countLostNode++;
             //set the condition of the node
@@ -448,7 +451,7 @@ namespace mabuse
                 Condition.Ensures(EdgeIdToEdgeObjectDict.Keys, "Edge dictionary")
                     .Contains(nodeA + "-" + nodeB)
                     .IsNotEmpty();
-                } 
+            } 
             //remove neighbor
             CurrentSetOfNodesInSimulation[nodeA].NodeIdOfNeighborsOfNodeObjectDict.Remove(nodeB);
             CurrentSetOfNodesInSimulation[nodeB].NodeIdOfNeighborsOfNodeObjectDict.Remove(nodeA);
@@ -457,6 +460,10 @@ namespace mabuse
             CurrentSetOfNodesInSimulation[nodeB].EdgeIdToEdgeObjectDict.Remove(nodeA + "-" + nodeB);
             //edge remove
             CurrentSetOfEdgesInSimulation.Remove(nodeA + "-" + nodeB);
+
+            Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "current simulation of edges dictionary")
+                .DoesNotContain(nodeA + "-" + nodeB);
+
         }
 
         /// <summary>
@@ -477,6 +484,10 @@ namespace mabuse
                         EdgeEndTime = int.MaxValue
                     });
             }
+
+            Condition.Ensures(EdgeIdToEdgeObjectDict.Keys, "Edge dictionary")
+                .ContainsAll(CurrentSetOfEdgesInSimulation.Keys);
+
         }
 
         /// <summary>
@@ -509,62 +520,103 @@ namespace mabuse
             {
                 foreach (Edge edge in EdgeIdToEdgeObjectDict.Values)
                 {
-                    if (!NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId))
+                    if (!NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId)&&(edge.NodeA.NodeId.Equals(node.NodeId)) ||(edge.NodeB.NodeId.Equals(node.NodeId)))
                     {
-                        if (edge.NodeA.NodeId.Equals(node.NodeId))
+                        String NodeId = EdgeNodeIdCatch(node, edge);
+                        //add edge to the node
+                        String newEdgeKey = KeyRegenerateForEdge(edge.EdgeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict);
+
+                        Condition.Ensures(newEdgeKey, "new key of edge")
+                            .IsNotNullOrEmpty()
+                            .IsNotNullOrWhiteSpace();
+
+                        NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.Add(newEdgeKey, edge);
+                        //add neighbor to the node
+                        string newNodeKey = KeyRegenerateForNode(NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
+
+                        Condition.Ensures(newNodeKey, "new key of node")
+                            .IsNotNullOrEmpty()
+                            .IsNotNullOrWhiteSpace();
+
+                        NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
                         {
-                            NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
-                            string newNodeKey = KeyRegenerateForNode(edge.NodeB.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
-                            NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
-                                {
-                                    NodeId = edge.NodeB.NodeId,
-                                    NodeStartTime = edge.EdgeStartTime,
-                                    NodeEndTime = edge.EdgeEndTime
-                                });
-                        }
-                        else if (edge.NodeB.NodeId.Equals(node.NodeId))
-                        {
-                            NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
-                            string newNodeKey = KeyRegenerateForNode(edge.NodeA.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
-                            NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
-                                {
-                                    NodeId = edge.NodeA.NodeId,
-                                    NodeStartTime = edge.EdgeStartTime,
-                                    NodeEndTime = edge.EdgeEndTime
-                                });
-                        }
+                            NodeId = NodeId,
+                            NodeStartTime = edge.EdgeStartTime,
+                            NodeEndTime = edge.EdgeEndTime
+                        });
+
+                        Condition.Ensures(NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Keys, "the neighbor dictionary of node dictionary")
+                            .Contains(NodeId);
+
                     }
                 }
             }
         }
 
-        private string KeyRegenerateForNode(string key, double Starttime, Dictionary<string, Node> NodeDic)
+        /// <summary>
+        /// regenerate key for node.
+        /// </summary>
+        /// <returns>The regenerate for node.</returns>
+        /// <param name="Key">Key.</param>
+        /// <param name="StartTime">Start time.</param>
+        /// <param name="NodeDic">Node dic.</param>
+        private string KeyRegenerateForNode(string Key, double StartTime, Dictionary<string, Node> NodeDic)
         {
-            Condition.Requires(key, "key to check existency")
+            Condition.Requires(Key, "key to check existency")
                 .IsNotNullOrEmpty();
 
-            if (!NodeDic.ContainsKey(key))
+            if (!NodeDic.ContainsKey(Key))
             {
-                return key;
+                return Key;
             }
             else
             {
-                return Starttime + " " + key;
+                return StartTime + " " + Key;
             }
         }
 
-        private string KeyRegenerateForEdge(string key, double Starttime, Dictionary<string, Edge> EdgeDic)
+        /// <summary>
+        /// regenerate key for edge.
+        /// </summary>
+        /// <returns>The regenerate for edge.</returns>
+        /// <param name="Key">Key.</param>
+        /// <param name="StartTime">Start time.</param>
+        /// <param name="EdgeDic">Edge dic.</param>
+        private string KeyRegenerateForEdge(string Key, double StartTime, Dictionary<string, Edge> EdgeDic)
         {
-            Condition.Requires(key, "key to check existency")
+            Condition.Requires(Key, "key to check existency")
                 .IsNotNullOrEmpty();
 
-            if (!EdgeDic.ContainsKey(key))
+            if (!EdgeDic.ContainsKey(Key))
             {
-                return key;
+                return Key;
             }
             else
             {
-                return Starttime + " " + key;
+                return StartTime + " " + Key;
+            }
+        }
+
+        /// <summary>
+        /// Edges and the node identifier catch id for node.
+        /// </summary>
+        /// <returns>The node identifier catch.</returns>
+        /// <param name="Node">Node.</param>
+        /// <param name="Edge">Edge.</param>
+        private string EdgeNodeIdCatch(Node Node, Edge Edge)
+        {
+            Condition.Requires(Node, "node")
+                .IsNotNull();
+            Condition.Requires(Edge, "edge")
+                .IsNotNull();
+
+            if (Edge.NodeA.NodeId.Equals(Node.NodeId))
+            {
+                return Edge.NodeB.NodeId;
+            }
+            else
+            {
+                return Edge.NodeA.NodeId;
             }
         }
     }

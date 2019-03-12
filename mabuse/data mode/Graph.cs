@@ -31,8 +31,10 @@ namespace mabuse.datamode
             foreach (Node node in NodeIdToNodeObjectDict.Values)
             {
                 degree = node.EdgeIdToEdgeObjectDict.Count;
+
                 Condition.Ensures(degree, "degree")
                     .IsNotLessThan(0);
+
                 if(degree > maxDegree)
                 {
                     maxDegree = degree;
@@ -84,9 +86,8 @@ namespace mabuse.datamode
             {
                 count = CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB);
 
-                Condition.Ensures(count, "count of parterwise neighbors of the edge")
-                    .IsGreaterOrEqual(0)
-                    .IsInRange(0, edge.NodeA.NodeIdOfNeighborsOfNodeObjectDict.Count);
+                Condition.Ensures(count, "count")
+                    .IsGreaterOrEqual(0);
 
                 if (count > maxCount)
                 {

@@ -12,6 +12,16 @@ namespace mabuse.UnitTest
     [TestFixture()]
     public class ReportFactoryClassTest
     {
+        //Test empty graph
+        //Empty graph
+        [Test]
+        public void Test_EmptyGraph()
+        {
+            Dictionary<double, Graph> graph = new Dictionary<double, Graph>();
+            ReportFactory reportFactory;
+            Assert.Throws<ArgumentException>(() => reportFactory = new ReportFactory(graph));
+        }
+
         /// <summary>
         ///Test for GetMaxDegree function
         /// </summary>
@@ -268,15 +278,6 @@ namespace mabuse.UnitTest
         /// <summary>
         /// Tests the get max number of common neighbor.
         /// </summary>
-        //Test empty graph
-        //Empty graph
-        [Test]
-        public void Test_GetMaxNumberOfCommonNeighborEmptyGraph()
-        {
-            Dictionary<double, Graph> graph = new Dictionary<double, Graph>();
-            ReportFactory reportFactory;
-            Assert.Throws<ArgumentException>(() => reportFactory = new ReportFactory(graph));
-        }
 
         //Test with information in graph
         [Test]

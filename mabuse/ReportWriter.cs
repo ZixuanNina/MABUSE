@@ -26,7 +26,16 @@ namespace mabuse
 
             GraphTimeToGraphObjectDict = result.GraphTimeToGraphObjectDict;
 
+            Condition.Ensures(GraphTimeToGraphObjectDict, "the graph dictionary")
+                .IsNotNull()
+                .IsNotEmpty();
+
             string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result), SectionFive(result)};
+
+            Condition.Ensures(lines, "lines to write report")
+                .IsNotEmpty()
+                .IsNotNull();
+
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
@@ -152,8 +161,10 @@ namespace mabuse
                 graph.GraphEndTime, countPartner[0], countPartner[1], countPartner[2], countPartner[3], countPartner[4],
                     countPartner[5], countPartner[6], countPartner[7], countPartner[8], countPartner[9]);
             }
+
             Condition.Ensures(table, "section four report")
                 .IsNotNullOrEmpty();
+
             return table;
         }
 
@@ -168,7 +179,7 @@ namespace mabuse
             {
                 title += string.Format("{0,-10}",graph.GraphEndTime);
             }
-            table += title + "";
+            table += title;
 
             Dictionary<string, int[]> NodeIsNodeIdToItsDegree = result.GetNodeDegrees();
 

@@ -20,18 +20,28 @@ namespace mabuse
         public ReportFactory(Dictionary<double,Graph> graph)
         {
             Condition.Requires(graph, "graph of Test")
-                .IsNotNull();
+                .IsNotNull()
+                .IsNotEmpty();
 
             GraphTimeToGraphObjectDict = graph;
         }
+
         public ReportFactory(Parser parser)
         {
             //input parameter condition check
             Condition.Requires(parser, "Result of Parser")
                 .IsNotNull();
+            Condition.Requires(parser.GetGraphTimeToGraphDictionary(), "graph of Test")
+                .IsNotNull()
+                .IsNotEmpty();
+            Condition.Requires(parser.GetNodeIdToNodeObjectDictionary(), "graph of Test")
+                .IsNotNull()
+                .IsNotEmpty();
 
             GraphTimeToGraphObjectDict = parser.GetGraphTimeToGraphDictionary();
             NodeIdToNodeObjectDict = parser.GetNodeIdToNodeObjectDictionary();
+
+
         }
 
         /// <summary>
@@ -154,6 +164,10 @@ namespace mabuse
                     maxValue = graph.GetGraphMaxNumberOfPartnerwiseNeighbors();
                 }
             }
+
+            Condition.Ensures(maxValue, "max value")
+                .IsGreaterOrEqual(0);
+
             return maxValue;
         }
         /// <summary>
@@ -203,6 +217,10 @@ namespace mabuse
                 }
                 NodeIdToItsDegree.Add(node.NodeId, countDegreeByTime);
             }
+
+            Condition.Ensures(NodeIdToItsDegree, "node id direct to its degree")
+                .IsNotEmpty();
+
             return NodeIdToItsDegree;
         }
     }

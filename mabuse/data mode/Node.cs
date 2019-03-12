@@ -32,6 +32,9 @@ namespace mabuse.datamode
                 }
             }
 
+            Condition.Ensures(count, "the number of degree of the node")
+                .IsInRange(0, EdgeIdToEdgeObjectDict.Count);
+
             return count;
         }
     }
