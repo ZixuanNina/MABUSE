@@ -104,11 +104,6 @@ namespace mabuse
                 {
                     bool SuccessfullyConvertTimeToDouble = Double.TryParse(LineTokens[0].Replace(":", ""), out TimeAtLine);
                     if (!SuccessfullyConvertTimeToDouble) throw new Exception($"Failed to parse time as double on line {CountLine}");
-
-                    if (TimeAtLine.Equals(730))
-                    {
-                        Console.WriteLine();
-                    }
                     CurrentYear = (int)(TimeAtLine / timeInterVal) + 1;
                     string command = LineTokens[1] + " " + LineTokens[2];
                     if ((!(TimeAtLine % timeInterVal).Equals(0) || (CurrentYear > PreviousYear)) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
