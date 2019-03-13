@@ -91,6 +91,7 @@ namespace mabuse
             Graph CurrentGraph = new Graph { GraphStartTime = 0, GraphEndTime = 0 };
             GraphTimeToGraphObjectDict.Add(0, CurrentGraph);
             int CurrentYear = 0;
+            int PreviousYear = 0;
             foreach (string line in lines)
             {
                 CountLine++;
@@ -106,9 +107,10 @@ namespace mabuse
 
                     CurrentYear = (int)(TimeAtLine / timeInterVal)+ 1;
                     string command = LineTokens[1] + " " + LineTokens[2];
-                    if (!(TimeAtLine % timeInterVal).Equals(0) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
+                    if ((!(TimeAtLine % timeInterVal).Equals(0) || CurrentYear > PreviousYear) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
                     {
                         double timeTmp = CurrentYear * 365;
+                        PreviousYear = CurrentYear;
                         Graph NextGraph = new Graph { GraphStartTime = timeTmp - 365, GraphEndTime = timeTmp };
                         GraphTimeToGraphObjectDict.Add(timeTmp, NextGraph);
                         StoreNodesAndEdgesFromPreviousInterval(CurrentGraph);
