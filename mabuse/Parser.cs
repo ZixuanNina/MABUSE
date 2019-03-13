@@ -91,7 +91,7 @@ namespace mabuse
             Graph CurrentGraph = new Graph { GraphStartTime = 0, GraphEndTime = 0 };
             GraphTimeToGraphObjectDict.Add(0, CurrentGraph);
             int CurrentYear = 0;
-            int PreviousYear = 0;
+            int PreviousYear = 1;
             foreach (string line in lines)
             {
                 CountLine++;
@@ -107,7 +107,7 @@ namespace mabuse
 
                     CurrentYear = (int)(TimeAtLine / timeInterVal)+ 1;
                     string command = LineTokens[1] + " " + LineTokens[2];
-                    if ((!(TimeAtLine % timeInterVal).Equals(0) || CurrentYear > PreviousYear) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
+                    if ((!(TimeAtLine % timeInterVal).Equals(0) || (CurrentYear > PreviousYear + 1)) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
                     {
                         double timeTmp = CurrentYear * 365;
                         PreviousYear = CurrentYear;
@@ -364,48 +364,39 @@ namespace mabuse
                 //increment gain edge
                 countGainEdge++;
                 //add the neighbor to each node
-                try
+                CurrentSetOfNodesInSimulation[nodeA].NodeIdOfNeighborsOfNodeObjectDict.Add(nodeB, new Node
                 {
-                    CurrentSetOfNodesInSimulation[nodeA].NodeIdOfNeighborsOfNodeObjectDict.Add(nodeB, new Node
-                    {
-                        NodeId = nodeB,
-                        NodeStartTime = time
-                    });
-                    CurrentSetOfNodesInSimulation[nodeB].NodeIdOfNeighborsOfNodeObjectDict.Add(nodeA, new Node
-                    {
-                        NodeId = nodeA,
-                        NodeStartTime = time
-                    });
-                    //add the edge to the node
-                    CurrentSetOfNodesInSimulation[nodeA].EdgeIdToEdgeObjectDict.Add(nodeA + "-" + nodeB, new Edge
-                    {
-                        EdgeId = nodeA + "-" + nodeB,
-                        NodeA = CurrentSetOfNodesInSimulation[nodeA],
-                        NodeB = CurrentSetOfNodesInSimulation[nodeB],
-                        EdgeStartTime = time
-                    });
-                    CurrentSetOfNodesInSimulation[nodeB].EdgeIdToEdgeObjectDict.Add(nodeA + "-" + nodeB, new Edge
-                    {
-                        EdgeId = nodeA + "-" + nodeB,
-                        NodeA = CurrentSetOfNodesInSimulation[nodeA],
-                        NodeB = CurrentSetOfNodesInSimulation[nodeB],
-                        EdgeStartTime = time
-                    });
-
-                    //set the start time of edge
-                    CurrentSetOfEdgesInSimulation.Add(nodeA + "-" + nodeB, new Edge
-                    {
-                        EdgeId = nodeA + "-" + nodeB,
-                        NodeA = CurrentSetOfNodesInSimulation[nodeA],
-                        NodeB = CurrentSetOfNodesInSimulation[nodeB],
-                        EdgeStartTime = time
-                    });
-                }
-                catch (KeyNotFoundException e)
+                    NodeId = nodeB,
+                    NodeStartTime = time
+                });
+                CurrentSetOfNodesInSimulation[nodeB].NodeIdOfNeighborsOfNodeObjectDict.Add(nodeA, new Node
                 {
-                    Console.WriteLine("Exception caught: {0}", e);
-                    throw;
-                }
+                    NodeId = nodeA,
+                    NodeStartTime = time
+                });
+                //add the edge to the node
+                CurrentSetOfNodesInSimulation[nodeA].EdgeIdToEdgeObjectDict.Add(nodeA + "-" + nodeB, new Edge
+                {
+                    EdgeId = nodeA + "-" + nodeB,
+                    NodeA = CurrentSetOfNodesInSimulation[nodeA],
+                    NodeB = CurrentSetOfNodesInSimulation[nodeB],
+                    EdgeStartTime = time
+                });
+                CurrentSetOfNodesInSimulation[nodeB].EdgeIdToEdgeObjectDict.Add(nodeA + "-" + nodeB, new Edge
+                {
+                    EdgeId = nodeA + "-" + nodeB,
+                    NodeA = CurrentSetOfNodesInSimulation[nodeA],
+                    NodeB = CurrentSetOfNodesInSimulation[nodeB],
+                    EdgeStartTime = time
+                });
+                //set the start time of edge
+                CurrentSetOfEdgesInSimulation.Add(nodeA + "-" + nodeB, new Edge
+                {
+                    EdgeId = nodeA + "-" + nodeB,
+                    NodeA = CurrentSetOfNodesInSimulation[nodeA],
+                    NodeB = CurrentSetOfNodesInSimulation[nodeB],
+                    EdgeStartTime = time
+                });
 
                 Condition.Ensures(CurrentSetOfEdgesInSimulation.Keys, "Current edge dictionary")
                     .IsNotNull()
@@ -506,37 +497,29 @@ namespace mabuse
         /// </summary>
          private void AddEdgeAndNeighborToTheNode()
         {
-
-            foreach (Node node in NodeIdToNodeObjectDict.Values)
+            foreach (Edge edge in EdgeIdToEdgeObjectDict.Values)
             {
-                foreach (Edge edge in EdgeIdToEdgeObjectDict.Values)
+                //add edge and neighbor to nodeA of Edge
+                string newEdgeKey = KeyRegenerateForEdge(edge.EdgeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeA.NodeId].EdgeIdToEdgeObjectDict);
+                NodeIdToNodeObjectDict[edge.NodeA.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
+                string newNodeKey = KeyRegenerateForNode(edge.NodeB.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
+                NodeIdToNodeObjectDict[edge.NodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
                 {
-                    if (!NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId))
-                    {
-                        if (edge.NodeA.NodeId.Equals(node.NodeId))
-                        {
-                            NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
-                            string newNodeKey = KeyRegenerateForNode(edge.NodeB.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
-                            NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
-                                {
-                                    NodeId = edge.NodeB.NodeId,
-                                    NodeStartTime = edge.EdgeStartTime,
-                                    NodeEndTime = edge.EdgeEndTime
-                                });
-                        }
-                        else if (edge.NodeB.NodeId.Equals(node.NodeId))
-                        {
-                            NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
-                            string newNodeKey = KeyRegenerateForNode(edge.NodeA.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
-                            NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
-                                {
-                                    NodeId = edge.NodeA.NodeId,
-                                    NodeStartTime = edge.EdgeStartTime,
-                                    NodeEndTime = edge.EdgeEndTime
-                                });
-                        }
-                    }
-                }
+                    NodeId = edge.NodeB.NodeId,
+                    NodeStartTime = edge.EdgeStartTime,
+                    NodeEndTime = edge.EdgeEndTime
+                });
+
+                //add edge and neighbor to the nodeB of ed
+                newEdgeKey = KeyRegenerateForEdge(edge.EdgeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeB.NodeId].EdgeIdToEdgeObjectDict);
+                NodeIdToNodeObjectDict[edge.NodeB.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
+                newNodeKey = KeyRegenerateForNode(edge.NodeA.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
+                NodeIdToNodeObjectDict[edge.NodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
+                {
+                    NodeId = edge.NodeA.NodeId,
+                    NodeStartTime = edge.EdgeStartTime,
+                    NodeEndTime = edge.EdgeEndTime
+                });
             }
         }
 
