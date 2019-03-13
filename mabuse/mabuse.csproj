@@ -46,11 +46,12 @@
     <Compile Include="data mode\Edge.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ReportFactory.cs" />
-    <Compile Include="ReportWriter.cs" />
+    <Compile Include="GeneraleRportWriter.cs" />
     <Compile Include="UnitTest\GraphClassTest.cs" />
     <Compile Include="UnitTest\ReportFactoryClassTest.cs" />
     <Compile Include="UnitTest\ParserClassTest.cs" />
     <Compile Include="UnitTest\NodeTest.cs" />
+    <Compile Include="NodeDegreeReportWritter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />

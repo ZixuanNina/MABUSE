@@ -11,10 +11,10 @@ namespace mabuse
     /// <author>
     /// Zixuan(Nina) Hao
     /// </author>
-    public class ReportWriter
+    public class GeneralReportWriter
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
-        public ReportWriter(ReportFactory result, string filePath)
+        public GeneralReportWriter(ReportFactory result, string filePath)
         {
             //input parameter condition check
             Condition.Requires(result, "the analyzed result")
@@ -26,7 +26,7 @@ namespace mabuse
 
             GraphTimeToGraphObjectDict = result.GraphTimeToGraphObjectDict;
 
-            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result), SectionFive(result)};
+            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
@@ -35,7 +35,7 @@ namespace mabuse
         /// </summary>
         private string SectionOne()
         {
-            string title = "MABUSE Report\n";
+            string title = "MABUSE General Report\n";
             string paragraph = "This report output the graph data based on the time of the simulation with 365 days a cycle. \n";
             string reportTime = "Report Date: " + DateTime.Today.ToString("D") + "\nReport Time: " + DateTime.Now.ToString("h:mm:ss tt" + "\n");
             string section1 = title + Environment.NewLine + paragraph + Environment.NewLine + reportTime + Environment.NewLine;
@@ -154,32 +154,6 @@ namespace mabuse
             }
             Condition.Ensures(table, "section four report")
                 .IsNotNullOrEmpty();
-            return table;
-        }
-
-        private string SectionFive(ReportFactory result)
-        {
-            Condition.Requires(result, "Result")
-                .IsNotNull();
-
-            string table = "Node degree Report\n Section5: \n";
-            string title = string.Format("{0, -40}", "Node Id");
-            foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
-            {
-                title += string.Format("{0,-10}",graph.GraphEndTime);
-            }
-            table += title + "";
-
-            Dictionary<string, int[]> NodeIsNodeIdToItsDegree = result.GetNodeDegrees();
-
-            foreach(string id in NodeIsNodeIdToItsDegree.Keys)
-            {
-                table += string.Format("\n{0, -40}", id);
-                foreach(int count in NodeIsNodeIdToItsDegree[id])
-                {
-                    table += string.Format("{0,-10}",count);
-                }
-            }
             return table;
         }
     }
