@@ -1,0 +1,17 @@
+MABUSE Node degree Report
+
+This report output the node degree at each 365 days interval. 
+
+Report Date: Tuesday, March 12, 2019
+Report Time: 5:09:30 PM
+
+
+Node degree Report
+ Section5: 
+Node Id                                 0         365       
+N_4                                     0         0         
+N_1                                     1         3         
+N_2                                     1         4         
+N_3                                     0         4         
+N_6                                     0         3         
+N_5                                     0         2         
