@@ -11,10 +11,10 @@ namespace mabuse
     /// <author>
     /// Zixuan(Nina) Hao
     /// </author>
-    public class ReportWriter
+    public class GeneralReportWriter
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
-        public ReportWriter(ReportFactory result, string filePath)
+        public GeneralReportWriter(ReportFactory result, string filePath)
         {
             //input parameter condition check
             Condition.Requires(result, "the analyzed result")
@@ -26,6 +26,7 @@ namespace mabuse
 
             GraphTimeToGraphObjectDict = result.GraphTimeToGraphObjectDict;
 
+<<<<<<< HEAD:mabuse/ReportWriter.cs
             Condition.Ensures(GraphTimeToGraphObjectDict, "the graph dictionary")
                 .IsNotNull()
                 .IsNotEmpty();
@@ -36,6 +37,9 @@ namespace mabuse
                 .IsNotEmpty()
                 .IsNotNull();
 
+=======
+            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
+>>>>>>> Feature:mabuse/GeneraleRportWriter.cs
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
@@ -44,7 +48,7 @@ namespace mabuse
         /// </summary>
         private string SectionOne()
         {
-            string title = "MABUSE Report\n";
+            string title = "MABUSE General Report\n";
             string paragraph = "This report output the graph data based on the time of the simulation with 365 days a cycle. \n";
             string reportTime = "Report Date: " + DateTime.Today.ToString("D") + "\nReport Time: " + DateTime.Now.ToString("h:mm:ss tt" + "\n");
             string section1 = title + Environment.NewLine + paragraph + Environment.NewLine + reportTime + Environment.NewLine;
@@ -167,6 +171,7 @@ namespace mabuse
 
             return table;
         }
+<<<<<<< HEAD:mabuse/ReportWriter.cs
 
         private string SectionFive(ReportFactory result)
         {
@@ -193,5 +198,7 @@ namespace mabuse
             }
             return table;
         }
+=======
+>>>>>>> Feature:mabuse/GeneraleRportWriter.cs
     }
 }

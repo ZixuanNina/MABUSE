@@ -86,7 +86,11 @@ namespace mabuse.datamode
             {
                 count = CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB);
 
+<<<<<<< HEAD
                 Condition.Ensures(count, "count")
+=======
+                Condition.Ensures(count, "count of parterwise neighbors of the edge")
+>>>>>>> Feature
                     .IsGreaterOrEqual(0);
 
                 if (count > maxCount)
