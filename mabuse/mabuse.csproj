@@ -45,17 +45,19 @@
     <Compile Include="data mode\Graph.cs" />
     <Compile Include="data mode\Edge.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="ReportFactory.cs" />
-    <Compile Include="GeneraleRportWriter.cs" />
     <Compile Include="UnitTest\GraphClassTest.cs" />
     <Compile Include="UnitTest\ReportFactoryClassTest.cs" />
     <Compile Include="UnitTest\ParserClassTest.cs" />
     <Compile Include="UnitTest\NodeTest.cs" />
-    <Compile Include="NodeDegreeReportWritter.cs" />
+    <Compile Include="Report mode\ReportFactory.cs" />
+    <Compile Include="Report mode\NodeDegreeReportWritter.cs" />
+    <Compile Include="Report mode\GeneraleRportWriter.cs" />
+    <Compile Include="Report mode\NodeDegreeReportFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />
     <Folder Include="UnitTest\" />
+    <Folder Include="Report mode\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

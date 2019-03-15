@@ -55,13 +55,17 @@ namespace mabuse
                 .IsNotNull()
                 .IsNotEmpty();
 
-            ReportFactory result = new ReportFactory(parser);
+            ReportFactory reportFactory = new ReportFactory(parser);
+            NodeDegreeReportFactory nodeDegreeReportFactory = new NodeDegreeReportFactory(parser);
 
-            Condition.Ensures(result, "result of parser")
+            Condition.Ensures(reportFactory, "result of parser")
+                .IsNotNull();
+            Condition.Ensures(nodeDegreeReportFactory, "result of parser")
                 .IsNotNull();
 
-            GeneralReportWriter writer = new GeneralReportWriter(result,pathToFileA);
-            NodeDegreeReportWritter nodeDegreeReport = new NodeDegreeReportWritter(result, pathToFileB);
+            GeneralReportWriter generalReportWriter = new GeneralReportWriter(reportFactory,pathToFileA);
+
+            NodeDegreeReportWritter nodeDegreeReport = new NodeDegreeReportWritter(nodeDegreeReportFactory, pathToFileB);
         }
 
         private static void MultiCompiler(string pathOfFile, string cases, string Directory)
@@ -77,31 +81,43 @@ namespace mabuse
             Condition.Ensures(parser.GetGraphTimeToGraphDictionary(), "graph creat by parser")
                 .IsNotNull()
                 .IsNotEmpty();
+                
 
-            ReportFactory result = new ReportFactory(parser);
-
-            Condition.Ensures(result, "result of parser")
-                .IsNotNull();
             String pathToFileA, pathToFileB;
             switch (cases)
             {
                 case "d":
+                    ReportFactory reportFactory = new ReportFactory(parser);
+                    NodeDegreeReportFactory nodeDegreeReportFactory = new NodeDegreeReportFactory(parser);
+
+                    Condition.Ensures(reportFactory, "result of parser")
+                        .IsNotNull();
+                    Condition.Ensures(nodeDegreeReportFactory, "result of parser")
+                        .IsNotNull();
                     pathToFileA = Directory + "GeneralReport.txt";
                     pathToFileB = Directory + "NodeDegreeReport.txt";
-                    GeneralReportWriter writer = new GeneralReportWriter(result, pathToFileA);
-                    NodeDegreeReportWritter nodeDegreeReport = new NodeDegreeReportWritter(result, pathToFileB);
+                    GeneralReportWriter generalReportWriter = new GeneralReportWriter(reportFactory, pathToFileA);
+                    NodeDegreeReportWritter nodeDegreeReport = new NodeDegreeReportWritter(nodeDegreeReportFactory, pathToFileB);
                     break;
                 case "gen":
+                    ReportFactory reportFactory1 = new ReportFactory(parser);
+                    Condition.Ensures(reportFactory1, "result of parser")
+                        .IsNotNull();
                     pathToFileA = Directory + "GeneralReport.txt";
-                    GeneralReportWriter writer1 = new GeneralReportWriter(result, pathToFileA);
+                    GeneralReportWriter generalReportWriter1 = new GeneralReportWriter(reportFactory1, pathToFileA);
                     break;
                 case "ND":
+                    NodeDegreeReportFactory nodeDegreeReportFactory2 = new NodeDegreeReportFactory(parser);
+                    Condition.Ensures(nodeDegreeReportFactory2, "result of parser")
+                        .IsNotNull();
                     pathToFileB = Directory + "NodeDegreeReport.txt";
-                    NodeDegreeReportWritter nodeDegreeReport2 = new NodeDegreeReportWritter(result, pathToFileB);
+                    NodeDegreeReportWritter nodeDegreeReport2 = new NodeDegreeReportWritter(nodeDegreeReportFactory2, pathToFileB);
                     break;
                 default:
                     throw new InvalidOperationException("unknown commend");
             }
         }
+
+        //Plan on add a method to handle the repots
     }
 }

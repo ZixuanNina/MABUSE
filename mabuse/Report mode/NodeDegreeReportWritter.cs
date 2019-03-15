@@ -8,7 +8,7 @@ namespace mabuse
     public class NodeDegreeReportWritter
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
-        public NodeDegreeReportWritter(ReportFactory result, string filePath)
+        public NodeDegreeReportWritter(NodeDegreeReportFactory result, string filePath)
         {
             //input parameter condition check
             Condition.Requires(result, "the analyzed result")
@@ -45,7 +45,7 @@ namespace mabuse
         /// </summary>
         /// <returns>The five.</returns>
         /// <param name="result">Result.</param>
-        private string SectionTwo(ReportFactory result)
+        private string SectionTwo(NodeDegreeReportFactory result)
         {
             Condition.Requires(result, "Result")
                 .IsNotNull();
