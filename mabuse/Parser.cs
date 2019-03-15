@@ -106,11 +106,7 @@ namespace mabuse
                     if (!SuccessfullyConvertTimeToDouble) throw new Exception($"Failed to parse time as double on line {CountLine}");
                     CurrentYear = (int)(TimeAtLine / timeInterVal) + 1;
                     string command = LineTokens[1] + " " + LineTokens[2];
-<<<<<<< HEAD
-                    if ((!(TimeAtLine % timeInterVal).Equals(0) || (CurrentYear > PreviousYear)) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
-=======
                     if ((!(TimeAtLine % timeInterVal).Equals(0) || (CurrentYear > PreviousYear + 1)) && !(GraphTimeToGraphObjectDict.ContainsKey(CurrentYear * 365)))
->>>>>>> Feature
                     {
                         double timeTmp = CurrentYear * 365;
                         PreviousYear = CurrentYear;
@@ -519,38 +515,6 @@ namespace mabuse
                 string newNodeKey = KeyRegenerateForNode(edge.NodeB.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
                 NodeIdToNodeObjectDict[edge.NodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
                 {
-<<<<<<< HEAD
-                    if (!NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId)&&(edge.NodeA.NodeId.Equals(node.NodeId)) ||(edge.NodeB.NodeId.Equals(node.NodeId)))
-                    {
-                        String NodeId = EdgeNodeIdCatch(node, edge);
-                        //add edge to the node
-                        String newEdgeKey = KeyRegenerateForEdge(edge.EdgeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict);
-
-                        Condition.Ensures(newEdgeKey, "new key of edge")
-                            .IsNotNullOrEmpty()
-                            .IsNotNullOrWhiteSpace();
-
-                        NodeIdToNodeObjectDict[node.NodeId].EdgeIdToEdgeObjectDict.Add(newEdgeKey, edge);
-                        //add neighbor to the node
-                        string newNodeKey = KeyRegenerateForNode(NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
-
-                        Condition.Ensures(newNodeKey, "new key of node")
-                            .IsNotNullOrEmpty()
-                            .IsNotNullOrWhiteSpace();
-
-                        NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
-                        {
-                            NodeId = NodeId,
-                            NodeStartTime = edge.EdgeStartTime,
-                            NodeEndTime = edge.EdgeEndTime
-                        });
-
-                        Condition.Ensures(NodeIdToNodeObjectDict[node.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Keys, "the neighbor dictionary of node dictionary")
-                            .Contains(NodeId);
-
-                    }
-                }
-=======
                     NodeId = edge.NodeB.NodeId,
                     NodeStartTime = edge.EdgeStartTime,
                     NodeEndTime = edge.EdgeEndTime
@@ -566,7 +530,6 @@ namespace mabuse
                     NodeStartTime = edge.EdgeStartTime,
                     NodeEndTime = edge.EdgeEndTime
                 });
->>>>>>> Feature
             }
         }
 

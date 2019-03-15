@@ -26,20 +26,7 @@ namespace mabuse
 
             GraphTimeToGraphObjectDict = result.GraphTimeToGraphObjectDict;
 
-<<<<<<< HEAD:mabuse/ReportWriter.cs
-            Condition.Ensures(GraphTimeToGraphObjectDict, "the graph dictionary")
-                .IsNotNull()
-                .IsNotEmpty();
-
-            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result), SectionFive(result)};
-
-            Condition.Ensures(lines, "lines to write report")
-                .IsNotEmpty()
-                .IsNotNull();
-
-=======
             string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
->>>>>>> Feature:mabuse/GeneraleRportWriter.cs
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
@@ -171,34 +158,5 @@ namespace mabuse
 
             return table;
         }
-<<<<<<< HEAD:mabuse/ReportWriter.cs
-
-        private string SectionFive(ReportFactory result)
-        {
-            Condition.Requires(result, "Result")
-                .IsNotNull();
-
-            string table = "Node degree Report\n Section5: \n";
-            string title = string.Format("{0, -40}", "Node Id");
-            foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
-            {
-                title += string.Format("{0,-10}",graph.GraphEndTime);
-            }
-            table += title;
-
-            Dictionary<string, int[]> NodeIsNodeIdToItsDegree = result.GetNodeDegrees();
-
-            foreach(string id in NodeIsNodeIdToItsDegree.Keys)
-            {
-                table += string.Format("\n{0, -40}", id);
-                foreach(int count in NodeIsNodeIdToItsDegree[id])
-                {
-                    table += string.Format("{0,-10}",count);
-                }
-            }
-            return table;
-        }
-=======
->>>>>>> Feature:mabuse/GeneraleRportWriter.cs
     }
 }
