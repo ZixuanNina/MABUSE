@@ -57,6 +57,7 @@ namespace mabuse
             Condition.Ensures(parser.GetGraphTimeToGraphDictionary(), "graph create by parser")
                 .IsNotNull()
                 .IsNotEmpty();
+            ReportsToWrite(parser, pathToFileA, pathToFileB);
         }
 
         /// <summary>

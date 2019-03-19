@@ -511,7 +511,7 @@ namespace mabuse
             {
                 //add edge and neighbor to nodeA of Edge
                 string newEdgeKey = KeyRegenerateForEdge(edge.EdgeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeA.NodeId].EdgeIdToEdgeObjectDict);
-                NodeIdToNodeObjectDict[edge.NodeA.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
+                NodeIdToNodeObjectDict[edge.NodeA.NodeId].EdgeIdToEdgeObjectDict.Add(newEdgeKey, edge);
                 string newNodeKey = KeyRegenerateForNode(edge.NodeB.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
                 NodeIdToNodeObjectDict[edge.NodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
                 {
@@ -522,7 +522,7 @@ namespace mabuse
 
                 //add edge and neighbor to the nodeB of ed
                 newEdgeKey = KeyRegenerateForEdge(edge.EdgeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeB.NodeId].EdgeIdToEdgeObjectDict);
-                NodeIdToNodeObjectDict[edge.NodeB.NodeId].EdgeIdToEdgeObjectDict.Add(edge.EdgeId, edge);
+                NodeIdToNodeObjectDict[edge.NodeB.NodeId].EdgeIdToEdgeObjectDict.Add(newEdgeKey, edge);
                 newNodeKey = KeyRegenerateForNode(edge.NodeA.NodeId, edge.EdgeStartTime, NodeIdToNodeObjectDict[edge.NodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict);
                 NodeIdToNodeObjectDict[edge.NodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Add(newNodeKey, new Node
                 {
