@@ -45,6 +45,15 @@ namespace mabuse
         }
 
         /// <summary>
+        /// Gets the edge identifier to edge object dict.
+        /// </summary>
+        /// <returns>The edge identifier to edge object dict.</returns>
+        public Dictionary<string, Edge> GetEdgeIdToEdgeObjectDict()
+        {
+            return EdgeIdToEdgeObjectDict;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="pathOfFile">Path to the trace file to be parsed.</param>
