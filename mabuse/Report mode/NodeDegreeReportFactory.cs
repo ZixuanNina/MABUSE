@@ -9,6 +9,20 @@ namespace mabuse
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
         public Dictionary<string, Node> NodeIdToNodeObjectDict = new Dictionary<string, Node>();
+
+        public NodeDegreeReportFactory(Dictionary<double, Graph> graph, Dictionary<string, Node> nodes)
+        {
+            Condition.Requires(graph, "graph of Test")
+                .IsNotNull()
+                .IsNotEmpty();
+            Condition.Requires(nodes, "node of test")
+                .IsNotNull()
+                .IsNotEmpty();
+
+            GraphTimeToGraphObjectDict = graph;
+            NodeIdToNodeObjectDict = nodes;
+        }
+
         public NodeDegreeReportFactory(Parser parser)
         {
             //input parameter condition check

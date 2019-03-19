@@ -26,52 +26,37 @@ namespace mabuse
 
             GraphTimeToGraphObjectDict = result.GraphTimeToGraphObjectDict;
 
-            string[] lines = { SectionOne(), SectionTwo(), SectionThree(result), SectionFour(result)};
+            string[] lines = { SectionOne(), SectionTwo(result), SectionThree(result)};
             System.IO.File.WriteAllLines(@filePath, lines);
         }
 
         /// <summary>
-        /// Section One
+        /// Section two.
         /// </summary>
         private string SectionOne()
         {
-            string title = "MABUSE General Report\n";
-            string paragraph = "This report output the graph data based on the time of the simulation with 365 days a cycle. \n";
-            string reportTime = "Report Date: " + DateTime.Today.ToString("D") + "\nReport Time: " + DateTime.Now.ToString("h:mm:ss tt" + "\n");
-            string section1 = title + Environment.NewLine + paragraph + Environment.NewLine + reportTime + Environment.NewLine;
-
-            Condition.Ensures(section1, "section one report")
-                .IsNotNullOrEmpty();
-
-            return section1;
-        }
-        /// <summary>
-        /// Section two.
-        /// </summary>
-        private string SectionTwo()
-        {
             //generate the table title
-            string table = "365 day time step\n"+"Section2: \n";
-            table += string.Format("{0,-10} | {1,10} | {2,10} | {3,10} | {4,10} | {5,10} | {6,10}\n",
-            "time interval",
-            "the # of nodes at the current time step",
-            "the # of edges at the current time step",
-            "the # of edges lost over the last 365-day interval",
-            "the # of edges gained over the last 365-day interval",
-            "the # of nodes gained over the last 365-day interval",
-            "the # of nodes lost over the last 365-day interval");
+            string table = "";
+            table += 
+            "time interval\t" +
+            "the # of nodes at the current time step\t" +
+            "the # of edges at the current time step\t" +
+            "the # of edges lost over the last 365-day interval\t" +
+            "the # of edges gained over the last 365-day interval\t" +
+            "the # of nodes gained over the last 365-day interval\t" +
+            "the # of nodes lost over the last 365-day interval\n";
 
             Condition.Requires(GraphTimeToGraphObjectDict, "list of graph to report")
                 .IsNotEmpty();
 
             foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
             {
-                table += string.Format("{0,-15} {1,-41} {2,-41} {3,-52} {4,-54} {5,-54} {6,-54}\n",
-                graph.GraphEndTime, graph.NodeIdToNodeObjectDict.Count, graph.EdgeIdToEdgeObjectDict.Count, graph.CountLostEdge, graph.CountGainEdge,
-                    graph.CountGainNode, graph.CountLostNode);
+                table += 
+                graph.GraphEndTime + "\t" + graph.NodeIdToNodeObjectDict.Count + "\t" + graph.EdgeIdToEdgeObjectDict.Count + "\t" + 
+                    graph.CountLostEdge + "\t" + graph.CountGainEdge + "\t" +  graph.CountGainNode + "\t" + graph.CountLostNode + "\n";
             }
 
-            Condition.Ensures(table, "section two report")
+            Condition.Ensures(table, "section one report")
                 .IsNotNullOrEmpty();
             return table;
         }
@@ -79,13 +64,13 @@ namespace mabuse
         /// Section Three.
         /// </summary>
         /// <param name="result">Result.</param>
-        private string SectionThree(ReportFactory result)
+        private string SectionTwo(ReportFactory result)
         {
             //input parameter condition check
             Condition.Requires(result, "the analyzed result")
                    .IsNotNull();
 
-            string table = "Degree distribution\n" + "Section3: \n";
+            string table = "";
             int[] interval = result.GetIntervalOfTheDistribution(result.GetMaxDegree());
            
             Condition.Ensures(interval, "interval")
@@ -93,11 +78,10 @@ namespace mabuse
                 .IsNotEmpty()
                 .HasLength(10);
 
-            table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
-            "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2], 
-                interval[2] + "-" + interval[3], interval[3] + "-" + interval[4],interval[4] + "-" + interval[5], 
-                interval[5] + "-" + interval[6], interval[6] + "-" + interval[7],interval[7] + "-" + interval[8], 
-                interval[8] + "-" + interval[9]);
+            table += "time interval\t" +  0 + "-" + interval[0] + "\t" + interval[0] + "-" + interval[1] + "\t" + interval[1] + "-" + interval[2] + "\t" +
+                interval[2] + "-" + interval[3] + "\t" + interval[3] + "-" + interval[4] + "\t" + interval[4] + "-" + interval[5] + "\t" +
+                interval[5] + "-" + interval[6] + "\t" + interval[6] + "-" + interval[7] + "\t" + interval[7] + "-" + interval[8] + "\t" +
+                interval[8] + "-" + interval[9] + "\n";
                 foreach(Graph graph in GraphTimeToGraphObjectDict.Values)
                 {
                     int[] countDeg = result.CountDegreeWithInterval(graph);
@@ -107,12 +91,11 @@ namespace mabuse
                         .IsNotEmpty()
                         .HasLength(10);
 
-                table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
-                    graph.GraphEndTime, countDeg[0], countDeg[1], countDeg[2], countDeg[3], countDeg[4],
-                        countDeg[5], countDeg[6], countDeg[7], countDeg[8], countDeg[9]);
+                table += graph.GraphEndTime + "\t" + countDeg[0] + "\t" + countDeg[1] + "\t" + countDeg[2] + "\t" + countDeg[3] + "\t" + countDeg[4] + "\t" +
+                        countDeg[5] + "\t" + countDeg[6] + "\t" + countDeg[7] + "\t" + countDeg[8] + "\t" + countDeg[9] + "\n";
                 }
             
-            Condition.Ensures(table, "section three report")
+            Condition.Ensures(table, "section two report")
                 .IsNotNullOrEmpty();
 
             return table;
@@ -121,12 +104,12 @@ namespace mabuse
         /// Sections Four.
         /// </summary>
         /// <param name="result">Result.</param>
-        private string SectionFour(ReportFactory result)
+        private string SectionThree(ReportFactory result)
         {
             Condition.Requires(result, "result")
                 .IsNotNull();
 
-            string table = "Edgewise shared partner distribution\n"+"Section4: \n";
+            string table = "";
             int[] interval = result.GetIntervalOfTheDistribution(result.GetMaxNumberOfCommonNeighbor());
 
             Condition.Ensures(interval, "interval")
@@ -134,11 +117,10 @@ namespace mabuse
                 .IsNotEmpty()
                 .HasLength(10);
 
-            table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
-            "time interval", 0 + "-" + interval[0], interval[0] + "-" + interval[1], interval[1] + "-" + interval[2],
-                interval[2] + "-" + interval[3], interval[3] + "-" + interval[4], interval[4] + "-" + interval[5],
-                interval[5] + "-" + interval[6], interval[6] + "-" + interval[7], interval[7] + "-" + interval[8],
-                interval[8] + "-" + interval[9]);
+            table += "time interval\t" + 0 + "-" + interval[0] + "\t" + interval[0] + "-" + interval[1] + "\t" + interval[1] + "-" + interval[2] + "\t" +
+                interval[2] + "-" + interval[3] + "\t" + interval[3] + "-" + interval[4] + "\t" + interval[4] + "-" + interval[5] + "\t" +
+                interval[5] + "-" + interval[6] + "\t" + interval[6] + "-" + interval[7] + "\t" + interval[7] + "-" + interval[8] + "\t" +
+                interval[8] + "-" + interval[9] + "\n";
             foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
             {
                 int[] countPartner = result.CountPartner(graph);
@@ -148,12 +130,11 @@ namespace mabuse
                     .IsNotEmpty()
                     .HasLength(10);
 
-                table += string.Format("{0,-20} {1,-10} {2,-10} {3,-10} {4,-10} {5,-10} {6,-10} {7,-10} {8,-10} {9,-10} {10,-10}\n",
-                graph.GraphEndTime, countPartner[0], countPartner[1], countPartner[2], countPartner[3], countPartner[4],
-                    countPartner[5], countPartner[6], countPartner[7], countPartner[8], countPartner[9]);
+                table += graph.GraphEndTime + "\t" + countPartner[0] + "\t" + countPartner[1] + "\t" + countPartner[2] + "\t" + countPartner[3] + "\t" + countPartner[4] + "\t" +
+                    countPartner[5] + "\t" + countPartner[6] + "\t" + countPartner[7] + "\t" + countPartner[8] + "\t" + countPartner[9] + "\n";
             }
 
-            Condition.Ensures(table, "section four report")
+            Condition.Ensures(table, "section three report")
                 .IsNotNullOrEmpty();
 
             return table;

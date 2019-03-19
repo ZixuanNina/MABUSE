@@ -53,6 +53,7 @@
     <Compile Include="Report mode\NodeDegreeReportWritter.cs" />
     <Compile Include="Report mode\GeneraleRportWriter.cs" />
     <Compile Include="Report mode\NodeDegreeReportFactory.cs" />
+    <Compile Include="UnitTest\NodeDegreeReportFactoryClassTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />
