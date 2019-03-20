@@ -1,4 +1,6 @@
-﻿namespace mabuse.datamode
+﻿using System.Collections.Generic;
+
+namespace mabuse.datamode
 {
     /// <summary>
     ///    Edge format the edge object to store the information
@@ -13,5 +15,6 @@
         public Node NodeB { get; set; }
         public double EdgeStartTime { get; set; }
         public double EdgeEndTime { get; set; }
+        public List<int> CountPartnerwiseByTime = new List<int>();
     }
 }

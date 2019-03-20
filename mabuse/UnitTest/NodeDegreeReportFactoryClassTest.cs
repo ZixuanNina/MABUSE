@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace mabuse.UnitTest
 {
+    /// <summary>
+    /// Node degree report factory class test.
+    /// </summary>
     [TestFixture()]
     public class NodeDegreeReportFactoryClassTest
     {

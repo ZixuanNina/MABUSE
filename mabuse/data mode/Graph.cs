@@ -42,6 +42,7 @@ namespace mabuse.datamode
             }
             return maxDegree;
         }
+
         /// <summary>
         /// get the number of neighbors of two nodes in a graph.
         /// </summary>
@@ -74,6 +75,7 @@ namespace mabuse.datamode
 
             return count;
         }
+
         /// <summary>
         /// Gets the graph max number of the partenerwise 
         /// </summary>

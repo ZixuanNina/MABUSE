@@ -16,6 +16,10 @@ namespace mabuse
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:mabuse.ReportFactory"/> class.
+        /// </summary>
+        /// <param name="graph">Graph.</param>
         public ReportFactory(Dictionary<double,Graph> graph)
         {
             Condition.Requires(graph, "graph of Test")
@@ -25,6 +29,10 @@ namespace mabuse
             GraphTimeToGraphObjectDict = graph;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:mabuse.ReportFactory"/> class.
+        /// </summary>
+        /// <param name="parser">Parser.</param>
         public ReportFactory(Parser parser)
         {
             //input parameter condition check

@@ -1,78 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
+using CuttingEdge.Conditions;
 using mabuse.datamode;
 
 namespace mabuse.Reportmode
 {
+    /// <summary>
+    /// Edgewise shared partner report factory.
+    /// </summary>
     public class EdgewiseSharedPartnerReportFactory
     {
-        private Dictionary<string, Node> NodeIdToNodeObjectDict = new Dictionary<string, Node>();
         private Dictionary<string, Edge> EdgeIdToEdgeObjectDict = new Dictionary<string, Edge>();
-        private Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
-        private Dictionary<string, int> EdgeWithCountedPartnerwise = new Dictionary<string, int>();
+        public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
 
+        public EdgewiseSharedPartnerReportFactory(Dictionary<double, Graph> graph, Dictionary<string, Edge> edges)
+        {
+            Condition.Requires(graph, "graph of Test")
+                .IsNotNull()
+                .IsNotEmpty();
+            Condition.Requires(edges, "node of test")
+                .IsNotNull()
+                .IsNotEmpty();
+
+            GraphTimeToGraphObjectDict = graph;
+            EdgeIdToEdgeObjectDict = edges;
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:mabuse.Reportmode.EdgewiseSharedPartnerReportFactory"/> class.
+        /// </summary>
+        /// <param name="parser">Parser.</param>
         public EdgewiseSharedPartnerReportFactory(Parser parser)
         {
-            NodeIdToNodeObjectDict = parser.GetNodeIdToNodeObjectDictionary();
+            Condition.Requires(parser, "parser result")
+                .IsNotNull();
+
             EdgeIdToEdgeObjectDict = parser.GetEdgeIdToEdgeObjectDict();
             GraphTimeToGraphObjectDict = parser.GetGraphTimeToGraphDictionary();
         }
 
-        public Dictionary<string, int> GetEdgePartnerWiseDataOfCurr(Graph graph)
+        /// <summary>
+        /// Counts the partnerwise of edge.
+        /// </summary>
+        /// <returns>The partnerwise of edge.</returns>
+        public Dictionary<string, Edge> CountPartnerwiseOfEdge()
         {
-            foreach(Edge edge in graph.EdgeIdToEdgeObjectDict.Values)
-            {
-                EdgeWithCountedPartnerwise.Add(edge.EdgeId, graph.CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB));
-            }
             foreach (Edge edge in EdgeIdToEdgeObjectDict.Values)
             {
-                foreach (string edgeId in EdgeWithCountedPartnerwise.Keys)
+                foreach (Graph graph in GraphTimeToGraphObjectDict.Values)
                 {
-                    if (edgeId.Equals(edge.EdgeId))
+                    if (graph.EdgeIdToEdgeObjectDict.ContainsKey(edge.EdgeId))
                     {
-                        EdgeWithCountedPartnerwise.Add(edge.EdgeId, -1);
-                        break;
+                        EdgeIdToEdgeObjectDict[edge.EdgeId].CountPartnerwiseByTime.Add(graph.CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB));
+                    }
+                    else
+                    {
+                        Condition.Ensures(graph.EdgeIdToEdgeObjectDict.Keys)
+                            .DoesNotContain(edge.EdgeId);
+
+                        EdgeIdToEdgeObjectDict[edge.EdgeId].CountPartnerwiseByTime.Add(-1);
                     }
                 }
             }
-            return EdgeWithCountedPartnerwise;
-        }
-
-        public int CountPartnerwise(double EndTime)
-        {
-            int count = 0;
-            foreach (Edge edge in EdgeIdToEdgeObjectDict.Values)
-            {
-                if (edge.EdgeEndTime >= EndTime && edge.EdgeStartTime <= EndTime)
-                {
-                    CountNumberOfPatnerwiseNeighbors(edge.NodeA, edge.NodeB, EndTime);
-                }
-            }
-            return count;
-        }
-
-        public int CountNumberOfPatnerwiseNeighbors(Node nodeA, Node nodeB, double EndTime)
-        {
-            int count = 0;
-            foreach (Node node in NodeIdToNodeObjectDict[nodeA.NodeId].NodeIdOfNeighborsOfNodeObjectDict.Values)
-            {
-                if (!nodeB.NodeId.Equals(node.NodeId)
-                    && NodeIdToNodeObjectDict[nodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict.ContainsKey(node.NodeId))
-                {
-                    if(NodeIdToNodeObjectDict[nodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict[node.NodeId].NodeStartTime <= EndTime 
-                    && NodeIdToNodeObjectDict[nodeB.NodeId].NodeIdOfNeighborsOfNodeObjectDict[node.NodeId].NodeEndTime >= EndTime)
-                    {
-                        count++;
-                    }
-                }
-            }
-            return count;
-        }
-
-        public int temp()
-        {
-
-            return 0;
+            return EdgeIdToEdgeObjectDict;
         }
     }
 }

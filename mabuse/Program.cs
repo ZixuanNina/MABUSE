@@ -1,5 +1,6 @@
 ﻿using System;
 using CuttingEdge.Conditions;
+using mabuse.Reportmode;
 
 namespace mabuse
 {
@@ -13,8 +14,13 @@ namespace mabuse
     {
         private static readonly string GENERAL_REPORT_OUTPUT_FILENAME = "GeneralReport.txt";
         private static readonly string NODEDEGREE_REPORT_OUTPUT_FILENAME = "NodeDegreeReport.txt";
+        private static readonly string EDGE_PARTNERWISE_COUNT_OUTPUT_FILENAME = "EdgewiseSharedPartnerReport.txt";
         private static readonly string COMMAND_SELECETING_REPORTFILE = "-s";
 
+        /// <summary>
+        /// The entry point of the program, where the program control starts and ends.
+        /// </summary>
+        /// <param name="args">The command-line arguments.</param>
         public static void Main(string[] args)
         {
             //input parameter condition check
@@ -28,7 +34,7 @@ namespace mabuse
             }
             else
             {
-                ReportGenerateWithPathsGiven(args[0], args[1], args[2]);
+                ReportGenerateWithPathsGiven(args[0], args[1], args[2], args[3]);
             }
         }
 
@@ -37,18 +43,22 @@ namespace mabuse
         /// </summary>
         /// <param name="pathOfFile">Path of file.</param>
         /// <param name="pathToFileA">Path to file.</param>
-        private static void ReportGenerateWithPathsGiven(string pathOfFile, string pathToFileA, string pathToFileB)
+        private static void ReportGenerateWithPathsGiven(string pathOfFile, string pathToFileA, string pathToFileB, string pathToFileC)
         {
             //input parameter condition check
             Condition.Requires(pathOfFile, "path of file for reading")
                 .IsNotNullOrEmpty()
                 .EndsWith(".txt")
                 .IsNotNullOrWhiteSpace();
-            Condition.Requires(pathToFileA, "path to write to the file")
+            Condition.Requires(pathToFileA, "path to write to the fileA")
                 .IsNotNullOrEmpty()
                 .EndsWith(".txt")
                 .IsNotNullOrWhiteSpace();
-            Condition.Requires(pathToFileB, "path to write to the file")
+            Condition.Requires(pathToFileB, "path to write to the fileB")
+                .IsNotNullOrEmpty()
+                .EndsWith(".txt")
+                .IsNotNullOrWhiteSpace();
+            Condition.Requires(pathToFileC, "path to write to the fileC")
                 .IsNotNullOrEmpty()
                 .EndsWith(".txt")
                 .IsNotNullOrWhiteSpace();
@@ -57,7 +67,7 @@ namespace mabuse
             Condition.Ensures(parser.GetGraphTimeToGraphDictionary(), "graph create by parser")
                 .IsNotNull()
                 .IsNotEmpty();
-            ReportsToWrite(parser, pathToFileA, pathToFileB);
+            ReportsToWrite(parser, pathToFileA, pathToFileB, pathToFileC);
         }
 
         /// <summary>
@@ -66,7 +76,7 @@ namespace mabuse
         /// <param name="parser">Parser.</param>
         /// <param name="pathToFileA">Path to file a.</param>
         /// <param name="pathToFileB">Path to file b.</param>
-        private static void ReportsToWrite(Parser parser, string pathToFileA, string pathToFileB)
+        private static void ReportsToWrite(Parser parser, string pathToFileA, string pathToFileB, string pathToFileC)
         {
             Condition.Ensures(parser.GetGraphTimeToGraphDictionary(), "graph create by parser")
                 .IsNotNull()
@@ -79,16 +89,24 @@ namespace mabuse
                 .IsNotNullOrEmpty()
                 .EndsWith(".txt")
                 .IsNotNullOrWhiteSpace();
+            Condition.Requires(pathToFileC, "path to write to the fileC")
+                .IsNotNullOrEmpty()
+                .EndsWith(".txt")
+                .IsNotNullOrWhiteSpace();
 
             ReportFactory reportFactory = new ReportFactory(parser);
             NodeDegreeReportFactory nodeDegreeReportFactory = new NodeDegreeReportFactory(parser);
+            EdgewiseSharedPartnerReportFactory edgewiseSharedPartnerReportFactory = new EdgewiseSharedPartnerReportFactory(parser);
 
-            Condition.Ensures(reportFactory, "result of parser")
+            Condition.Ensures(reportFactory, "result of parserA")
                 .IsNotNull();
-            Condition.Ensures(nodeDegreeReportFactory, "result of parser")
+            Condition.Ensures(nodeDegreeReportFactory, "result of parserB")
+                .IsNotNull();
+            Condition.Ensures(edgewiseSharedPartnerReportFactory, "result of parserC")
                 .IsNotNull();
             GeneralReportWriter generalReportWriter = new GeneralReportWriter(reportFactory, pathToFileA);
             NodeDegreeReportWritter nodeDegreeReport = new NodeDegreeReportWritter(nodeDegreeReportFactory, pathToFileB);
+            EdgewiseSharedPartnerReportWritter edgewiseSharedPartnerReportWritter = new EdgewiseSharedPartnerReportWritter(edgewiseSharedPartnerReportFactory, pathToFileC);
         }
 
         /// <summary>
@@ -113,13 +131,15 @@ namespace mabuse
                 
 
             String pathToFileA = Directory + GENERAL_REPORT_OUTPUT_FILENAME,
-            pathToFileB = Directory + NODEDEGREE_REPORT_OUTPUT_FILENAME;
+            pathToFileB = Directory + NODEDEGREE_REPORT_OUTPUT_FILENAME,
+            pathToFileC = Directory + EDGE_PARTNERWISE_COUNT_OUTPUT_FILENAME;
+
             switch (cases)
             {
-                case "d":
-                    ReportsToWrite(parser, pathToFileA, pathToFileB);
+                case "ALL":
+                    ReportsToWrite(parser, pathToFileA, pathToFileB, pathToFileC);
                     break;
-                case "gen":
+                case "GEN":
                     ReportFactory reportFactory1 = new ReportFactory(parser);
                     Condition.Ensures(reportFactory1, "result of parser")
                         .IsNotNull();
@@ -130,6 +150,12 @@ namespace mabuse
                     Condition.Ensures(nodeDegreeReportFactory2, "result of parser")
                         .IsNotNull();
                     NodeDegreeReportWritter nodeDegreeReport2 = new NodeDegreeReportWritter(nodeDegreeReportFactory2, pathToFileB);
+                    break;
+                case "EW":
+                    EdgewiseSharedPartnerReportFactory edgewiseSharedPartnerReportFactory = new EdgewiseSharedPartnerReportFactory(parser);
+                    Condition.Ensures(edgewiseSharedPartnerReportFactory, "result of parserC")
+                        .IsNotNull();
+                    EdgewiseSharedPartnerReportWritter edgewiseSharedPartnerReportWritter = new EdgewiseSharedPartnerReportWritter(edgewiseSharedPartnerReportFactory, pathToFileC);
                     break;
                 default:
                     throw new InvalidOperationException("unknown commend");

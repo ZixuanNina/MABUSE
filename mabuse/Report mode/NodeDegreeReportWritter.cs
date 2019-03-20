@@ -5,9 +5,17 @@ using mabuse.datamode;
 
 namespace mabuse
 {
+    /// <summary>
+    /// Node degree report writter.
+    /// </summary>
     public class NodeDegreeReportWritter
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:mabuse.NodeDegreeReportWritter"/> class.
+        /// </summary>
+        /// <param name="result">Result.</param>
+        /// <param name="filePath">File path.</param>
         public NodeDegreeReportWritter(NodeDegreeReportFactory result, string filePath)
         {
             //input parameter condition check

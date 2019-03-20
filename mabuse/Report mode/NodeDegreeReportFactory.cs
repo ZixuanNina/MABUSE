@@ -5,11 +5,19 @@ using mabuse.datamode;
 
 namespace mabuse
 {
+    /// <summary>
+    /// Node degree report factory.
+    /// </summary>
     public class NodeDegreeReportFactory
     {
         public Dictionary<double, Graph> GraphTimeToGraphObjectDict = new Dictionary<double, Graph>();
         public Dictionary<string, Node> NodeIdToNodeObjectDict = new Dictionary<string, Node>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:mabuse.NodeDegreeReportFactory"/> class.
+        /// </summary>
+        /// <param name="graph">Graph.</param>
+        /// <param name="nodes">Nodes.</param>
         public NodeDegreeReportFactory(Dictionary<double, Graph> graph, Dictionary<string, Node> nodes)
         {
             Condition.Requires(graph, "graph of Test")
@@ -23,6 +31,10 @@ namespace mabuse
             NodeIdToNodeObjectDict = nodes;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:mabuse.NodeDegreeReportFactory"/> class.
+        /// </summary>
+        /// <param name="parser">Parser.</param>
         public NodeDegreeReportFactory(Parser parser)
         {
             //input parameter condition check
@@ -39,7 +51,10 @@ namespace mabuse
             NodeIdToNodeObjectDict = parser.GetNodeIdToNodeObjectDictionary();
         }
 
-
+        /// <summary>
+        /// Gets the node degrees.
+        /// </summary>
+        /// <returns>The node degrees.</returns>
         public Dictionary<string, int[]> GetNodeDegrees()
         {
             Dictionary<String, int[]> NodeIdToItsDegree = new Dictionary<string, int[]>();
