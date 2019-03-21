@@ -57,6 +57,7 @@
     <Compile Include="Report mode\EdgewiseSharedPartnerReportFactory.cs" />
     <Compile Include="Report mode\EdgewiseSharedPartnerReportWritter.cs" />
     <Compile Include="UnitTest\EdgewiseSharedPartnerReportFactoryClassTest.cs" />
+    <Compile Include="ReportOrganize.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data mode\" />
