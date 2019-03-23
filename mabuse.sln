@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mabuse", "mabuse\mabuse.csproj", "{E8041B8C-47D3-4C2B-9CC1-D160C7C6F5E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mabuse.UnitTest", "UnitTests\mabuse.UnitTest.csproj", "{76075EB2-665F-483D-9F50-9A71037E1EE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mabuse.UnitTest", "mabuse.UnitTest\mabuse.UnitTest.csproj", "{F7ECACEE-63E6-48D5-8647-DA0584DFCC1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		{E8041B8C-47D3-4C2B-9CC1-D160C7C6F5E6}.Debug|x86.Build.0 = Debug|Any CPU
 		{E8041B8C-47D3-4C2B-9CC1-D160C7C6F5E6}.Release|x86.ActiveCfg = Release|Any CPU
 		{E8041B8C-47D3-4C2B-9CC1-D160C7C6F5E6}.Release|x86.Build.0 = Release|Any CPU
-		{76075EB2-665F-483D-9F50-9A71037E1EE6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{76075EB2-665F-483D-9F50-9A71037E1EE6}.Debug|x86.Build.0 = Debug|Any CPU
-		{76075EB2-665F-483D-9F50-9A71037E1EE6}.Release|x86.ActiveCfg = Release|Any CPU
-		{76075EB2-665F-483D-9F50-9A71037E1EE6}.Release|x86.Build.0 = Release|Any CPU
+		{F7ECACEE-63E6-48D5-8647-DA0584DFCC1B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F7ECACEE-63E6-48D5-8647-DA0584DFCC1B}.Debug|x86.Build.0 = Debug|Any CPU
+		{F7ECACEE-63E6-48D5-8647-DA0584DFCC1B}.Release|x86.ActiveCfg = Release|Any CPU
+		{F7ECACEE-63E6-48D5-8647-DA0584DFCC1B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
