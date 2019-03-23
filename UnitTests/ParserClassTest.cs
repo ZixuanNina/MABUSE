@@ -1,20 +1,18 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using mabuse.datamode;
+using Xunit;
+
 namespace mabuse.UnitTest
 {
     /// <summary>
     /// Parser class test.
     /// </summary>
-    [TestFixture()]
     public class ParserClassTest
     {
         /// <summary>
         /// Parsers the empty string test.
         /// </summary>
-        [Test()]
+        [Fact]
         public void ParserTestEmptyFile()
         {
             Parser parser;
@@ -24,7 +22,7 @@ namespace mabuse.UnitTest
         /// <summary>
         /// Parsers the test invalid file name(non txt file).
         /// </summary>
-        [Test()]
+        [Fact]
         public void ParserTestInvalidFileName()
         {
             Parser parser;
@@ -34,7 +32,7 @@ namespace mabuse.UnitTest
         /// <summary>
         /// Parsers the test invalid file path.
         /// </summary>
-        [Test()]
+        [Fact]
         public void ParserTestInvalidFilePath()
         {
             Parser parser;

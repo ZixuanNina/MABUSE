@@ -1,0 +1,10 @@
+﻿Thanks for using mabusa data analysing report
+To report with your choice of file name: 
+<path of file for analyzing> <path of file_Define_name for General report> <For Node Degree Report> <For EdgewisePartner Report>
+To report by selection:
+<path of file for analyzing> -ALL "Generate all reports"
+                             -GEN "Generate general report"
+                             -ND  "Node Degree report"
+                             -EW  "Edgewise Shared partner count report"
+                                 <path of directory to save reports>
+                                 

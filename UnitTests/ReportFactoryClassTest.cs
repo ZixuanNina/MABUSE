@@ -1,20 +1,18 @@
 ﻿using mabuse.datamode;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System;
-using CuttingEdge.Conditions;
+using Xunit;
 
 namespace mabuse.UnitTest
 {
     /// <summary>
     /// Report factory class test.
     /// </summary>
-    [TestFixture()]
     public class ReportFactoryClassTest
     {
         //Test empty graph
         //Empty graph
-        [Test]
+        [Fact]
         public void Test_EmptyGraph()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>();
@@ -26,12 +24,12 @@ namespace mabuse.UnitTest
         ///Test for GetMaxDegree function
         /// </summary>
         // Test when there is one edge
-        [Test]
+        [Fact]
         public void Test_GetMaxDegree()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
@@ -45,34 +43,36 @@ namespace mabuse.UnitTest
             graph[365].NodeIdToNodeObjectDict["b"].EdgeIdToEdgeObjectDict.Add("a-b", new Edge { EdgeId = "a-b" });
             ReportFactory reportFactory = new ReportFactory(graph);
             int maxDegree = reportFactory.GetMaxDegree();
-            Assert.AreEqual(maxDegree, 1);
+            int expect = 1;
+            Assert.Equal(maxDegree, expect);
         }
 
         //Test when there is no node and no edge
-        [Test]
+        [Fact]
         public void Test_GEtMaxDegZeroNodeAndEdge()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             int maxDeg = reportFactory.GetMaxDegree();
-            Assert.AreEqual(maxDeg, int.MinValue);
+            Assert.Equal(maxDeg, int.MinValue);
             graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
             graph[365].NodeIdToNodeObjectDict.Add("b", new Node { NodeId = "b" });
             ReportFactory reportFactory1 = new ReportFactory(graph);
             maxDeg = reportFactory1.GetMaxDegree();
-            Assert.AreEqual(maxDeg, 0);
+            int expect = 0;
+            Assert.Equal(maxDeg, expect);
         }
         //test if function could find the max degree with comparision
-        [Test]
+        [Fact]
         public void Tesr_GetMaxDegWithComparision()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             graph[0].NodeIdToNodeObjectDict.Add("a", new Node { NodeId = "a" });
@@ -90,34 +90,35 @@ namespace mabuse.UnitTest
 
             ReportFactory reportFactory = new ReportFactory(graph);
             int maxDeg = reportFactory.GetMaxDegree();
-            Assert.AreEqual(maxDeg, 2);
+            int expect = 2;
+            Assert.Equal(maxDeg, expect);
         }
 
         /// <summary>
         /// Tests the get interval of the distribution.
         /// </summary>
         //Max = 0
-        [Test]
+        [Fact]
         public void Test_GetIntervalOfTheDistributionZero()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             int[] range = reportFactory.GetIntervalOfTheDistribution(0);
             int[] expect = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
         }
 
         //max is negative
-        [Test]
+        [Fact]
         public void Test_GetIntervalOfTheDistributionNegative()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             
@@ -125,37 +126,37 @@ namespace mabuse.UnitTest
         }
 
         //max is in 1-10
-        [Test]
+        [Fact]
         public void Test_GetIntervalOfTheDistributionRangeOneToTen()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             int[] range = reportFactory.GetIntervalOfTheDistribution(1);
             int[] expect = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
             range = reportFactory.GetIntervalOfTheDistribution(5);
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
             range = reportFactory.GetIntervalOfTheDistribution(10);
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
         }
 
         //max is greater than 10
-        [Test]
+        [Fact]
         public void Test_GetIntervalOfTheDistributionRangeGreaterThanTen()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
             int[] range = reportFactory.GetIntervalOfTheDistribution(11);
             int[] expect = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 };
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
             range = reportFactory.GetIntervalOfTheDistribution(20);
             expect[0] = 2;
             expect[1] = 4;
@@ -167,22 +168,22 @@ namespace mabuse.UnitTest
             expect[7] = 16;
             expect[8] = 18;
             expect[9] = 20;
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
             range = reportFactory.GetIntervalOfTheDistribution(22);
             expect = new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 22 };
-            Assert.AreEqual(range, expect);
+            Assert.Equal(range, expect);
         }
 
         /// <summary>
         /// Tests the count degree with interval.
         /// </summary>
         //Empty graph
-        [Test]
+        [Fact]
         public void Test_CountDegreeWithIntervalZeroDegree()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
@@ -191,16 +192,16 @@ namespace mabuse.UnitTest
             int[] count = reportFactory.CountDegreeWithInterval(graph[0]);
             int[] expect = new int[10];
             expect[0] = 1;
-            Assert.AreEqual(count, expect);
+            Assert.Equal(count, expect);
         }
 
         //with degrees
-        [Test]
+        [Fact]
         public void Test_CountDegreeWithInterval()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
 
@@ -267,12 +268,12 @@ namespace mabuse.UnitTest
             expect[0] = 1;
             expect[1] = 2;
             expect[2] = 1;
-            Assert.AreEqual(countDeg, expect);
+            Assert.Equal(countDeg, expect);
             countDeg = reportFactory.CountDegreeWithInterval(graph[365]);
             expect[0] = 2;
             expect[1] = 0;
             expect[2] = 0;
-            Assert.AreEqual(countDeg, expect);
+            Assert.Equal(countDeg, expect);
         }
 
         /// <summary>
@@ -280,12 +281,12 @@ namespace mabuse.UnitTest
         /// </summary>
 
         //Test with information in graph
-        [Test]
+        [Fact]
         public void Test_GetMaxNumberOfCommonNeighbor()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
 
@@ -338,19 +339,19 @@ namespace mabuse.UnitTest
             ReportFactory reportFactory = new ReportFactory(graph);
             int maxCount = reportFactory.GetMaxNumberOfCommonNeighbor();
             int expect = 1;
-            Assert.AreEqual(maxCount, expect);
+            Assert.Equal(maxCount, expect);
         }
 
         /// <summary>
         /// Tests the count partner function.
         /// </summary>
         //Empty graph
-        [Test]
+        [Fact]
         public void Test_CountPartnerEmpty()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
             ReportFactory reportFactory = new ReportFactory(graph);
@@ -367,15 +368,16 @@ namespace mabuse.UnitTest
             int[] countDeg = reportFactory.CountPartner(graph[0]);
             int[] expect = new int[10];
             expect[0] = 1;
-            Assert.AreEqual(countDeg, expect);
+            Assert.Equal(countDeg, expect);
         }
 
         //Test the CountPartner Function
+        [Fact]
         public void Test_CountPartner()
         {
             Dictionary<double, Graph> graph = new Dictionary<double, Graph>
             {
-                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0, } },
+                { 0, new Graph { GraphStartTime = 0, GraphEndTime = 0 } },
                 { 365, new Graph {GraphStartTime = 0, GraphEndTime = 365} }
             };
 
@@ -461,13 +463,14 @@ namespace mabuse.UnitTest
             ReportFactory reportFactory = new ReportFactory(graph);
             int[] countDeg = reportFactory.CountDegreeWithInterval(graph[0]);
             int[] expect = new int[10];
-            expect[0] = 4;
-            expect[1] = 1;
-            Assert.AreEqual(countDeg, expect);
+            expect[1] = 2;
+            expect[2] = 2;
+            Assert.Equal(expect, countDeg);
             countDeg = reportFactory.CountDegreeWithInterval(graph[365]);
-            expect[0] = 1;
+            expect[2] = 0;
             expect[1] = 0;
-            Assert.AreEqual(countDeg, expect);
+            expect[0] = 2;
+            Assert.Equal(expect, countDeg);
         }
 
     }
